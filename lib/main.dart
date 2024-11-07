@@ -12,6 +12,8 @@ void main() {
   runApp(const MyApp());
 }
 
+/// [MyApp] is the main application widget.
+/// This widget is the root of the application.
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
