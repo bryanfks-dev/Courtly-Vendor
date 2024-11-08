@@ -36,7 +36,7 @@ class _AppScaffold extends State<AppScaffold> {
         selectedIcon:
             const HeroIcon(HeroIcons.home, style: HeroIconStyle.solid),
         label: "Home",
-        backgroundColor: ColorSchemes.secondaryBackground),
+        backgroundColor: ColorSchemes.primaryBackground),
     PageProps(
         appBar: const CenteredAppBar(title: "Orders"),
         body: const OrdersPage(),
