@@ -1,15 +1,15 @@
 /// [LoginDTO] is a class that holds the data that is needed to login a vendor.
 ///
-/// [LoginDTO] takes [phoneNumber] and [password] as required data, [phoneNumber]
+/// [LoginDTO] takes [email] and [password] as required data
 class LoginDTO {
-  /// [phoneNumber] is the phone number of the vendor.
-  final String phoneNumber;
+  /// [email] is the phone number of the vendor.
+  final String email;
 
   /// [password] is the password of the vendor.
   final String password;
 
   LoginDTO({
-    required this.phoneNumber,
+    required this.email,
     required this.password,
   });
 
@@ -18,7 +18,7 @@ class LoginDTO {
   /// Returns a map of [String] key and [String] value.
   Map<String, String> toMap() {
     return {
-      "phone_number": phoneNumber,
+      "email": email,
       "password": password,
     };
   }

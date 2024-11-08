@@ -18,13 +18,13 @@ class LoginPage extends StatelessWidget {
   /// [_data] is the login form data.
   /// This data is used to store the login form contents.
   final LoginDTO _data = LoginDTO(
-    phoneNumber: "",
+    email: "",
     password: "",
   );
 
   /// [_textInputControllers] is the map of text input keys.
   final Map<String, TextEditingController> _textInputControllers = {
-    "phoneNumber": TextEditingController(),
+    "email": TextEditingController(),
     "password": TextEditingController(),
   };
 
@@ -65,10 +65,10 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   children: [
                     TextFormField(
-                        controller: _textInputControllers["phoneNumber"],
+                        controller: _textInputControllers["email"],
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
-                          label: Text("Phone Number"),
+                          label: Text("Email"),
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                         )),
@@ -103,32 +103,15 @@ class LoginPage extends StatelessWidget {
                   ],
                 )),
             const SizedBox(height: 40),
-            Column(
-              children: [
-                PrimaryButton(
-                  onPressed: () {
-                    // Return to previous page
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    minimumSize:
-                        WidgetStateProperty.all(const Size.fromHeight(0)),
-                  ),
-                  child: const Text("Login"),
-                ),
-                const SizedBox(height: 10),
-                SecondaryButton(
-                  onPressed: () {
-                    // Navigate to register page
-                    Navigator.pushNamed(context, Routes.register);
-                  },
-                  style: ButtonStyle(
-                    minimumSize:
-                        WidgetStateProperty.all(const Size.fromHeight(0)),
-                  ),
-                  child: const Text("I'm new here"),
-                ),
-              ],
+            PrimaryButton(
+              onPressed: () {
+                // Return to previous page
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                minimumSize: WidgetStateProperty.all(const Size.fromHeight(0)),
+              ),
+              child: const Text("Login"),
             )
           ],
         ),

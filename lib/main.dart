@@ -1,5 +1,6 @@
 import 'package:courtly_vendor/core/config/app_themes.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
+import 'package:courtly_vendor/presentation/widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 
 /// [main] is the entry point of the application.
@@ -28,7 +29,7 @@ class _MyApp extends State<MyApp> {
       title: 'Courtly Vendor',
       debugShowCheckedModeBanner: false,
       theme: AppThemes.light,
-      home: LoginPage(),
+      home: const AppScaffold(),
     );
   }
 }
