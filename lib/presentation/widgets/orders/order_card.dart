@@ -1,24 +1,23 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
+import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-/// [RecentOrderCard] is a widget that displays a card
-/// containing recent order information.
+/// [OrderCard] is a widget that displays a card
+/// containing order information.
 /// 
-/// It is used in the [HomePage] widget.
-class RecentOrderCard extends StatelessWidget {
-  const RecentOrderCard({super.key});
+/// It is used in the [OrdersPage] widget.
+class OrderCard extends StatelessWidget {
+  const OrderCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+      onTap: () {},
       child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          border: Border.all(color: ColorSchemes.subtle),
-          borderRadius: BorderRadius.circular(20),
-        ),
+        padding: const EdgeInsets.symmetric(
+            vertical: 10, horizontal: PAGE_PADDING_MOBILE),
+        decoration: BoxDecoration(color: ColorSchemes.primaryBackground),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,10 +46,10 @@ class RecentOrderCard extends StatelessWidget {
             Text("Badminton Court",
                 style: TextStyle(color: ColorSchemes.text, fontSize: 14)),
             const SizedBox(height: 3),
-            Text("Rp 30,000",
+            Text("BCA - Rp 30,000",
                 style: TextStyle(
                     color: ColorSchemes.text,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                     fontSize: 12)),
           ],
         ),

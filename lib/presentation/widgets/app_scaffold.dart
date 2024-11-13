@@ -60,7 +60,7 @@ class _AppScaffold extends State<AppScaffold> {
           backgroundColor: ColorSchemes.primaryBackground),
       PageProps(
           appBar: const CenteredAppBar(title: "Orders"),
-          body: const OrdersPage(),
+          body: OrdersPage(),
           icon: const HeroIcon(HeroIcons.clipboardDocumentList),
           selectedIcon: const HeroIcon(HeroIcons.clipboardDocumentList,
               style: HeroIconStyle.solid),
