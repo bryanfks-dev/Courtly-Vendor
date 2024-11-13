@@ -2,6 +2,7 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu_card.dart';
+import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -85,7 +86,9 @@ class VendorProfilePage extends StatelessWidget {
                   InkWell(
                       overlayColor:
                           const WidgetStatePropertyAll(Colors.transparent),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Routes.myCourts);
+                      },
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
