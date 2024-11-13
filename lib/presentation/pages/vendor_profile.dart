@@ -1,5 +1,8 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
+import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu_card.dart';
 import 'package:courtly_vendor/routes/routes.dart';
@@ -8,6 +11,73 @@ import 'package:heroicons/heroicons.dart';
 
 class VendorProfilePage extends StatelessWidget {
   const VendorProfilePage({super.key});
+
+  /// [openLogoutModal] is the function to open the logout modal.
+  /// This function will open the modal to confirm the logout action.
+  ///
+  /// - Parameters:
+  ///   - context
+  ///
+  /// - Returns: void.
+  void openLogoutModal(BuildContext context) {
+    // Open the logout modal.
+    showBottomModalSheet(
+        context,
+        Column(
+          children: [
+            Text.rich(
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: ColorSchemes.text),
+                TextSpan(text: "You are about to ", children: [
+                  TextSpan(
+                      text: "log out",
+                      style: TextStyle(color: ColorSchemes.error)),
+                  const TextSpan(text: ", confirm to proceed.")
+                ])),
+            const SizedBox(
+              height: 30,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SecondaryButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                        side: WidgetStatePropertyAll(BorderSide(
+                            width: 1, color: ColorSchemes.highlight)),
+                        minimumSize:
+                            const WidgetStatePropertyAll(Size.fromHeight(0))),
+                    child: Text(
+                      "I changed my mind",
+                      style: TextStyle(
+                          color: ColorSchemes.highlight,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    )),
+                const SizedBox(
+                  height: 10,
+                ),
+                PrimaryButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStateProperty.all(ColorSchemes.error),
+                        minimumSize:
+                            WidgetStateProperty.all(const Size.fromHeight(0))),
+                    child: const Text("Log me out",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)))
+              ],
+            )
+          ],
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +185,9 @@ class VendorProfilePage extends StatelessWidget {
             ProfileMenu(
                 iconData: HeroIcons.arrowRightOnRectangle,
                 title: "Log Out",
-                onTap: () {})
+                onTap: () {
+                  openLogoutModal(context);
+                })
           ],
         ),
       ),
