@@ -26,43 +26,6 @@ class _AppScaffold extends State<AppScaffold> {
   /// from bottom navigation bar.
   int _selectedIndex = 0;
 
-  /// [pages] is the list of pages that can be selected from
-  /// bottom navigation bar.
-  final List<PageProps> pages = [
-    PageProps(
-        appBar: const DefaultAppBar(),
-        body: const HomePage(),
-        icon: const HeroIcon(HeroIcons.home),
-        selectedIcon:
-            const HeroIcon(HeroIcons.home, style: HeroIconStyle.solid),
-        label: "Home",
-        backgroundColor: ColorSchemes.primaryBackground),
-    PageProps(
-        appBar: const CenteredAppBar(title: "Orders"),
-        body: const OrdersPage(),
-        icon: const HeroIcon(HeroIcons.clipboardDocumentList),
-        selectedIcon: const HeroIcon(HeroIcons.clipboardDocumentList,
-            style: HeroIconStyle.solid),
-        label: "Orders",
-        backgroundColor: ColorSchemes.secondaryBackground),
-    PageProps(
-        appBar: const CenteredAppBar(title: "Reviews"),
-        body: const ReviewsPage(),
-        icon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
-        selectedIcon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis,
-            style: HeroIconStyle.solid),
-        label: "Reviews",
-        backgroundColor: ColorSchemes.secondaryBackground),
-    PageProps(
-        appBar: const CenteredAppBar(title: "Vendor Profile"),
-        body: const VendorProfilePage(),
-        icon: const HeroIcon(HeroIcons.briefcase),
-        selectedIcon:
-            const HeroIcon(HeroIcons.briefcase, style: HeroIconStyle.solid),
-        label: "Vendor Profile",
-        backgroundColor: ColorSchemes.secondaryBackground)
-  ];
-
   /// [_changePage] is a function to change page using bottom navigation bar.
   /// It takes [newIndex] as the index of the new page.
   ///
@@ -74,6 +37,52 @@ class _AppScaffold extends State<AppScaffold> {
     setState(() {
       _selectedIndex = newIndex;
     });
+  }
+
+  /// [pages] is the list of pages that can be selected from
+  /// bottom navigation bar.
+  late final List<PageProps> pages;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    pages = [
+      PageProps(
+          appBar: const DefaultAppBar(),
+          body: HomePage(
+            changePageCallback: _changePage,
+          ),
+          icon: const HeroIcon(HeroIcons.home),
+          selectedIcon:
+              const HeroIcon(HeroIcons.home, style: HeroIconStyle.solid),
+          label: "Home",
+          backgroundColor: ColorSchemes.primaryBackground),
+      PageProps(
+          appBar: const CenteredAppBar(title: "Orders"),
+          body: const OrdersPage(),
+          icon: const HeroIcon(HeroIcons.clipboardDocumentList),
+          selectedIcon: const HeroIcon(HeroIcons.clipboardDocumentList,
+              style: HeroIconStyle.solid),
+          label: "Orders",
+          backgroundColor: ColorSchemes.secondaryBackground),
+      PageProps(
+          appBar: const CenteredAppBar(title: "Reviews"),
+          body: const ReviewsPage(),
+          icon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
+          selectedIcon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis,
+              style: HeroIconStyle.solid),
+          label: "Reviews",
+          backgroundColor: ColorSchemes.secondaryBackground),
+      PageProps(
+          appBar: const CenteredAppBar(title: "Vendor Profile"),
+          body: const VendorProfilePage(),
+          icon: const HeroIcon(HeroIcons.briefcase),
+          selectedIcon:
+              const HeroIcon(HeroIcons.briefcase, style: HeroIconStyle.solid),
+          label: "Vendor Profile",
+          backgroundColor: ColorSchemes.secondaryBackground)
+    ];
   }
 
   @override

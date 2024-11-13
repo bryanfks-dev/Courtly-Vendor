@@ -1,10 +1,20 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/presentation/widgets/home/recent_order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
+/// [HomePage] is the home page widget.
+/// This widget is the first page of the application.
+/// It contains the summary of the recent orders and other details.
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key, required this.changePageCallback});
+
+  /// [changePageCallback] is the callback function to change the page.
+  final ValueChanged<int> changePageCallback;
+
+  /// [_recentOrders] is the list of recent orders.
+  final ValueNotifier<List<dynamic>> _recentOrders = ValueNotifier([1, 2, 3]);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +113,40 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Recent Orders",
+                    style: TextStyle(
+                        color: ColorSchemes.text,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16)),
+                GestureDetector(
+                  onTap: () {
+                    changePageCallback(1);
+                  },
+                  child: Text("View All",
+                      style:
+                          TextStyle(color: ColorSchemes.primary, fontSize: 12)),
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            ValueListenableBuilder(
+                valueListenable: _recentOrders,
+                builder: (BuildContext context, value, _) {
+                  return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, _) =>
+                          const RecentOrderCard(),
+                      separatorBuilder: (BuildContext context, _) =>
+                          const SizedBox(height: 10),
+                      itemCount: value.length);
+                }),
+            const SizedBox(height: PAGE_PADDING_MOBILE),
           ],
         ),
       ),
