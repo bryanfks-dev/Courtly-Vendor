@@ -11,7 +11,7 @@ class CourtCard extends StatelessWidget {
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       onTap: () {},
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
             border: Border.all(
               color: ColorSchemes.subtle,
@@ -36,9 +36,10 @@ class CourtCard extends StatelessWidget {
                 )
               ],
             )),
-            IconButton(
-                onPressed: () {},
-                icon: HeroIcon(
+            InkWell(
+                onTap: () {},
+                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                child: HeroIcon(
                   HeroIcons.trash,
                   color: ColorSchemes.error,
                   size: 20,
