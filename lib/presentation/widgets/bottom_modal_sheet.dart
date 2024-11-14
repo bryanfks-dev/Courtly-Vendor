@@ -19,7 +19,7 @@ void showBottomModalSheet(BuildContext context, Widget content) {
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: PAGE_PADDING_MOBILE,
-                  vertical: PAGE_PADDING_MOBILE),
+                  vertical: PAGE_PADDING_MOBILE * 1.5),
               child: content,
             )
           ],

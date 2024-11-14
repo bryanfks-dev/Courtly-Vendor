@@ -59,7 +59,7 @@ class VendorProfilePage extends StatelessWidget {
                           fontWeight: FontWeight.w500),
                     )),
                 const SizedBox(
-                  height: 10,
+                  height: 4,
                 ),
                 PrimaryButton(
                     onPressed: () {},
