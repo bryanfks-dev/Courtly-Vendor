@@ -68,7 +68,7 @@ class _AppScaffold extends State<AppScaffold> {
           backgroundColor: ColorSchemes.secondaryBackground),
       PageProps(
           appBar: const CenteredAppBar(title: "Reviews"),
-          body: const ReviewsPage(),
+          body: ReviewsPage(),
           icon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
           selectedIcon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis,
               style: HeroIconStyle.solid),
