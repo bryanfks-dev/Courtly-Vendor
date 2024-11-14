@@ -1,14 +1,85 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/core/enums/sports.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
+import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
 import 'package:courtly_vendor/presentation/widgets/my_courts/court_card.dart';
+import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
+/// [MyCourtsPage] is widget that represent my courts page.
+/// It shows the list of courts.
 class MyCourtsPage extends StatelessWidget {
   MyCourtsPage({super.key});
 
+  /// [_ordersNotifer] is list of order history.
   final ValueNotifier<List<dynamic>> _ordersNotifer = ValueNotifier([1, 2, 3]);
+
+  /// [_chipLabelItems] is the items of filter chip.
+  final List<Widget> _chipLabelItems =
+      Sports.values.map((e) => Text(e.label)).toList();
+
+  /// [_selectedChipNotifier] is the selected chip via filter chips.
+  final ValueNotifier<int> _selectedChipNotifier = ValueNotifier(0);
+
+  /// [openAddCourtTypeModal] is the function to open the add court type modal.
+  /// This function will open the modal to add new court type.
+  ///
+  /// - Parameters:
+  ///  - context : BuildContext
+  ///
+  /// - Returns: void.
+  void openAddCourtTypeModal(BuildContext context) {
+    // Open the logout modal.
+    showBottomModalSheet(
+        context,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Pick Court Type",
+                    style: TextStyle(
+                        color: ColorSchemes.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600)),
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    overlayColor:
+                        const WidgetStatePropertyAll(Colors.transparent),
+                    child: HeroIcon(
+                      HeroIcons.xMark,
+                      color: ColorSchemes.highlight,
+                      size: 20,
+                    ))
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            FilterChips(
+                items: _chipLabelItems, selectedItem: _selectedChipNotifier),
+            const SizedBox(
+              height: 30,
+            ),
+            PrimaryButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                    minimumSize:
+                        WidgetStateProperty.all(const Size.fromHeight(0))),
+                child: const Text("Create Court",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500)))
+          ],
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +190,9 @@ class MyCourtsPage extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           fontSize: 16)),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      openAddCourtTypeModal(context);
+                    },
                     child: Row(
                       children: [
                         HeroIcon(HeroIcons.plusCircle,

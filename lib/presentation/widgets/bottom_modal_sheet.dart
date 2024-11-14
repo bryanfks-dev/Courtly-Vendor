@@ -3,22 +3,23 @@ import 'package:flutter/material.dart';
 
 /// [showBottomModalSheet] is a function that shows a bottom modal sheet.
 /// This function is used to show a modal sheet at the bottom of the screen.
-/// 
+///
 /// - Parameters:
 ///  - [context]: The [BuildContext] of the widget.
 ///  - [content]: The [Widget] content of the modal sheet.
-/// 
+///
 /// Returns a [void].
 void showBottomModalSheet(BuildContext context, Widget content) {
   showModalBottomSheet(
       context: context,
+      isDismissible: false,
       builder: (BuildContext context) {
         return Wrap(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: PAGE_PADDING_MOBILE,
-                  vertical: PAGE_PADDING_MOBILE * 2),
+                  vertical: PAGE_PADDING_MOBILE),
               child: content,
             )
           ],
