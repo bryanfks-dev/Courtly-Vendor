@@ -179,7 +179,9 @@ class VendorProfilePage extends StatelessWidget {
               ProfileMenu(
                   iconData: HeroIcons.lockClosed,
                   title: "Change Password",
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.changePassword);
+                  }),
             ]),
             const SizedBox(height: 10),
             ProfileMenu(

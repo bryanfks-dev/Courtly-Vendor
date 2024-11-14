@@ -2,4 +2,5 @@
 /// This class is used to navigate between screens.
 class Routes {
   static String myCourts = "/my-courts";
+  static String changePassword = "/change-password";
 }
