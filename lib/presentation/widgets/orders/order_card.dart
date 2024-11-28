@@ -46,7 +46,7 @@ class OrderCard extends StatelessWidget {
             Text("Badminton Court",
                 style: TextStyle(color: ColorSchemes.text, fontSize: 14)),
             const SizedBox(height: 3),
-            Text("BCA - Rp 30,000",
+            Text("Rp 30,000",
                 style: TextStyle(
                     color: ColorSchemes.text,
                     fontWeight: FontWeight.w700,
