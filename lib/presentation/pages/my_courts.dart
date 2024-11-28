@@ -6,8 +6,10 @@ import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
 import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
 import 'package:courtly_vendor/presentation/widgets/my_courts/court_card.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
+import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 /// [MyCourtsPage] is widget that represent my courts page.
 /// It shows the list of courts.
@@ -189,38 +191,75 @@ class MyCourtsPage extends StatelessWidget {
                           color: ColorSchemes.text,
                           fontWeight: FontWeight.w600,
                           fontSize: 16)),
-                  GestureDetector(
-                    onTap: () {
-                      openAddCourtTypeModal(context);
-                    },
-                    child: Row(
-                      children: [
-                        HeroIcon(HeroIcons.plusCircle,
-                            color: ColorSchemes.primary, size: 16),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text("Add",
-                            style: TextStyle(
-                                color: ColorSchemes.primary, fontSize: 12))
-                      ],
-                    ),
-                  )
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     openAddCourtTypeModal(context);
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       HeroIcon(HeroIcons.plusCircle,
+                  //           color: ColorSchemes.primary, size: 16),
+                  //       const SizedBox(
+                  //         width: 5,
+                  //       ),
+                  //       Text("Add",
+                  //           style: TextStyle(
+                  //               color: ColorSchemes.primary, fontSize: 12))
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
               const SizedBox(height: 20),
-              ValueListenableBuilder(
-                  valueListenable: _ordersNotifer,
-                  builder: (BuildContext context, value, _) {
-                    return ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, _) =>
-                            const CourtCard(),
-                        separatorBuilder: (BuildContext context, _) =>
-                            const SizedBox(height: 10),
-                        itemCount: value.length);
-                  })
+              // ValueListenableBuilder(
+              //     valueListenable: _ordersNotifer,
+              //     builder: (BuildContext context, value, _) {
+              //       return ListView.separated(
+              //           shrinkWrap: true,
+              //           physics: const NeverScrollableScrollPhysics(),
+              //           itemBuilder: (BuildContext context, _) =>
+              //               const CourtCard(),
+              //           separatorBuilder: (BuildContext context, _) =>
+              //               const SizedBox(height: 10),
+              //           itemCount: value.length);
+              //     })
+              InkWell(
+                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                onTap: () {
+                  Navigator.of(context).pushNamed(Routes.detailCourts);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: ColorSchemes.subtle,
+                      ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Basketball Court",
+                            style: TextStyle(
+                                color: ColorSchemes.text,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            "Total: ${3} Court(s)",
+                            style: TextStyle(
+                                color: ColorSchemes.text, fontSize: 10),
+                          )
+                        ],
+                      )),
+                    ],
+                  ),
+                ),
+              )
             ]),
           )),
     );

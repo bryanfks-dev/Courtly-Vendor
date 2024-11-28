@@ -3,4 +3,5 @@
 class Routes {
   static String myCourts = "/my-courts";
   static String changePassword = "/change-password";
+  static String detailCourts = "/detail-courts";
 }
