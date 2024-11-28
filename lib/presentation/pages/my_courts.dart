@@ -1,5 +1,6 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/core/enums/sports.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/my_courts/court_card.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,13 @@ import 'package:heroicons/heroicons.dart';
 class MyCourtsPage extends StatelessWidget {
   MyCourtsPage({super.key});
 
-  /// [_ordersNotifer] is list of order history.
-  final ValueNotifier<List<dynamic>> _ordersNotifer = ValueNotifier([1, 2, 3]);
+  /// [_courtCountNotifer] is a notifer for court count values
+  final ValueNotifier<Map<String, int>> _courtCountNotifer = ValueNotifier({
+    Sports.football.label: 0,
+    Sports.badminton.label: 0,
+    Sports.basketball.label: 0,
+    Sports.tennis.label: 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -121,13 +127,22 @@ class MyCourtsPage extends StatelessWidget {
                       fontSize: 16)),
               const SizedBox(height: 20),
               ValueListenableBuilder(
-                  valueListenable: _ordersNotifer,
+                  valueListenable: _courtCountNotifer,
                   builder: (BuildContext context, value, _) {
+                    // [entries] is the list of the map entries
+                    final List<MapEntry<String, int>> entries =
+                        value.entries.toList();
+
                     return ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, _) =>
-                            const CourtCard(),
+                        itemBuilder: (BuildContext context, int index) {
+                          // [entry] is the map entry
+                          final MapEntry<String, int> entry = entries[index];
+
+                          return CourtCard(
+                              courtType: entry.key, courtCount: entry.value);
+                        },
                         separatorBuilder: (BuildContext context, _) =>
                             const SizedBox(height: 10),
                         itemCount: value.length);

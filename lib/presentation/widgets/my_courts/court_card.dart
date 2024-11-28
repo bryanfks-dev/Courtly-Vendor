@@ -2,7 +2,14 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class CourtCard extends StatelessWidget {
-  const CourtCard({super.key});
+  const CourtCard(
+      {super.key, required this.courtType, required this.courtCount});
+
+  // [courtType] is the type of court
+  final String courtType;
+
+  // [courtCount] is the count of courts
+  final int courtCount;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +27,14 @@ class CourtCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Basketball Court",
+                "$courtType Court",
                 style: TextStyle(
                     color: ColorSchemes.text,
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               ),
               Text(
-                "Total: ${3} Court(s)",
+                "Total: $courtCount Court(s)",
                 style: TextStyle(color: ColorSchemes.text, fontSize: 10),
               )
             ],
