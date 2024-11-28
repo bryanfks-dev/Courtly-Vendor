@@ -30,94 +30,46 @@ class MyCourtsPage extends StatelessWidget {
             physics: const PageScrollPhysics(),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 20),
+              Container(
+                width: double.maxFinite,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                decoration: BoxDecoration(
+                  color: ColorSchemes.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
+                        color: ColorSchemes.primaryBackground,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: HeroIcon(
+                        HeroIcons.listBullet,
+                        size: 20,
                         color: ColorSchemes.primary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: ColorSchemes.primaryBackground,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: HeroIcon(
-                              HeroIcons.listBullet,
-                              size: 20,
-                              color: ColorSchemes.primary,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "5",
-                            style: TextStyle(
-                                color: ColorSchemes.primaryBackground,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 28),
-                          ),
-                          Text(
-                            "Court Types",
-                            style: TextStyle(
-                                color: ColorSchemes.primaryBackground,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12),
-                          )
-                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 20),
-                      decoration: BoxDecoration(
-                        color: ColorSchemes.subtle,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: ColorSchemes.primaryBackground,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: HeroIcon(
-                              HeroIcons.clipboardDocumentList,
-                              size: 20,
-                              color: ColorSchemes.text,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "20",
-                            style: TextStyle(
-                                color: ColorSchemes.text,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 28),
-                          ),
-                          Text(
-                            "Total Courts",
-                            style: TextStyle(
-                                color: ColorSchemes.text,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12),
-                          )
-                        ],
-                      ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "20",
+                      style: TextStyle(
+                          color: ColorSchemes.primaryBackground,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 28),
                     ),
-                  ),
-                ],
+                    Text(
+                      "Total Courts",
+                      style: TextStyle(
+                          color: ColorSchemes.primaryBackground,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               Text("Courts",
