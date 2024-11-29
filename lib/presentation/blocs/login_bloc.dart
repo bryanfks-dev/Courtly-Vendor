@@ -46,7 +46,6 @@ class LoginBloc extends Cubit<LoginState> {
     } on TimeoutException catch (_) {
       emit(LoginErrorState(errorMessage: "Request timeout"));
     } catch (e) {
-      print(e);
       emit(LoginErrorState(errorMessage: e.toString()));
     }
   }

@@ -1,4 +1,12 @@
 import 'package:courtly_vendor/core/config/app_themes.dart';
+import 'package:courtly_vendor/data/repository/api/login_repository.dart';
+import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
+import 'package:courtly_vendor/domain/usercases/auth_usecase.dart';
+import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
+import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
+import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
 import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
@@ -6,6 +14,7 @@ import 'package:courtly_vendor/presentation/pages/my_courts.dart';
 import 'package:courtly_vendor/presentation/widgets/app_scaffold.dart';
 import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// [main] is the entry point of the application.
 /// This function runs the application.
@@ -68,16 +77,48 @@ class _MyApp extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Courtly Vendor',
-      debugShowCheckedModeBanner: false,
-      theme: AppThemes.light,
-      routes: {
-        Routes.myCourts: (context) => MyCourtsPage(),
-        Routes.detailCourts: (context) => const MyCourtDetail(),
-        Routes.changePassword: (context) => const ChangePasswordPage(),
-      },
-      home: _pages[_currentIndex],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (BuildContext context) => AuthBloc(
+            authUsecase: AuthUsecase(
+              tokenRepository: TokenRepository(),
+            ),
+          )..add(CheckAuthEvent()),
+        ),
+        BlocProvider(
+            create: (BuildContext context) => LoginBloc(
+                loginUsecase: LoginUsecase(
+                    tokenRepository: TokenRepository(),
+                    loginRepository: LoginRepository()))),
+      ],
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (BuildContext context, AuthState state) {
+          // Check for authentication state
+          if (state is AuthenticatedState) {
+            _setAppScaffoldPage();
+
+            return;
+          }
+
+          if (state is UnauthenticatedState) {
+            _setLoginPage();
+
+            return;
+          }
+        },
+        child: MaterialApp(
+          title: 'Courtly Vendor',
+          debugShowCheckedModeBanner: false,
+          theme: AppThemes.light,
+          routes: {
+            Routes.myCourts: (context) => MyCourtsPage(),
+            Routes.detailCourts: (context) => const MyCourtDetail(),
+            Routes.changePassword: (context) => const ChangePasswordPage(),
+          },
+          home: _pages[_currentIndex],
+        ),
+      ),
     );
   }
 }

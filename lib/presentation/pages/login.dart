@@ -1,8 +1,5 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
-import 'package:courtly_vendor/data/repository/api/login_repository.dart';
-import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
-import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/login_state.dart';
 import 'package:courtly_vendor/presentation/validators/login_form_validator.dart';
@@ -47,169 +44,158 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (BuildContext context) => LoginBloc(
-            loginUsecase: LoginUsecase(
-                loginRepository: LoginRepository(),
-                tokenRepository: TokenRepository())),
-        child: BlocConsumer<LoginBloc, LoginState>(
-            listener: (BuildContext context, LoginState state) {
-              // Check the state of the login bloc.
-              if (state is LoginErrorState) {
-                // Check if the error message is a string.
-                if (state.errorMessage is String) {
-                  // Show the error message in the snackbar.
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.errorMessage),
-                  ));
+    return BlocConsumer<LoginBloc, LoginState>(
+        listener: (BuildContext context, LoginState state) {
+          // Check the state of the login bloc.
+          if (state is LoginErrorState) {
+            // Check if the error message is a string.
+            if (state.errorMessage is String) {
+              // Show the error message in the snackbar.
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.errorMessage),
+              ));
 
-                  return;
-                }
+              return;
+            }
 
-                // Check if the error message is a map.
-                if (state.errorMessage is Map) {
-                  // Set the error text for the email.
-                  _errorTexts["email"] = state.errorMessage["email"]?.first;
+            // Check if the error message is a map.
+            if (state.errorMessage is Map) {
+              // Set the error text for the email.
+              _errorTexts["email"] = state.errorMessage["email"]?.first;
 
-                  // Set the error text for the password.
-                  _errorTexts["password"] =
-                      state.errorMessage["password"]?.first;
-                }
-              }
+              // Set the error text for the password.
+              _errorTexts["password"] = state.errorMessage["password"]?.first;
+            }
+          }
 
-              // Check if the login is successful.
-              if (state is LoginSuccessState) {
-                toAppScaffoldPage();
-              }
-            },
-            builder: (BuildContext context, LoginState state) => Scaffold(
-                  backgroundColor: ColorSchemes.primaryBackground,
-                  body: SafeArea(
-                    child: BlocBuilder<LoginBloc, LoginState>(
-                        builder: (BuildContext context, LoginState state) {
-                      // Check the state of the login bloc.
-                      if (state is LoginLoadingState) {
-                        return const LoadingScreen();
-                      }
+          // Check if the login is successful.
+          if (state is LoginSuccessState) {
+            toAppScaffoldPage();
+          }
+        },
+        builder: (BuildContext context, LoginState state) => Scaffold(
+              backgroundColor: ColorSchemes.primaryBackground,
+              body: SafeArea(
+                child: BlocBuilder<LoginBloc, LoginState>(
+                    builder: (BuildContext context, LoginState state) {
+                  // Check the state of the login bloc.
+                  if (state is LoginLoadingState) {
+                    return const LoadingScreen();
+                  }
 
-                      // Create a reference to the login bloc.
-                      LoginBloc controller = context.read<LoginBloc>();
+                  // Create a reference to the login bloc.
+                  LoginBloc controller = context.read<LoginBloc>();
 
-                      return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: PAGE_PADDING_MOBILE),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorSchemes.primary,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              const Text(
-                                "Signing into vendor account",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                      TextFormField(
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: PAGE_PADDING_MOBILE),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: ColorSchemes.primary,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          const Text(
+                            "Signing into vendor account",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                      controller:
+                                          _textInputControllers["email"],
+                                      style: const TextStyle(fontSize: 14),
+                                      decoration: InputDecoration(
+                                        label: const Text("Email"),
+                                        errorText: _errorTexts["email"],
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 0, horizontal: 15),
+                                      )),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  ValueListenableBuilder(
+                                      valueListenable: _obsecureTextNotifier,
+                                      builder: (BuildContext context,
+                                          bool obsecureText, _) {
+                                        return TextFormField(
                                           controller:
-                                              _textInputControllers["email"],
+                                              _textInputControllers["password"],
                                           style: const TextStyle(fontSize: 14),
+                                          obscureText: obsecureText,
+                                          enableSuggestions: false,
+                                          autocorrect: false,
                                           decoration: InputDecoration(
-                                            label: const Text("Email"),
-                                            errorText: _errorTexts["email"],
+                                            label: const Text("Password"),
+                                            errorText: _errorTexts["password"],
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                                     vertical: 0,
                                                     horizontal: 15),
-                                          )),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      ValueListenableBuilder(
-                                          valueListenable:
-                                              _obsecureTextNotifier,
-                                          builder: (BuildContext context,
-                                              bool obsecureText, _) {
-                                            return TextFormField(
-                                              controller: _textInputControllers[
-                                                  "password"],
-                                              style:
-                                                  const TextStyle(fontSize: 14),
-                                              obscureText: obsecureText,
-                                              enableSuggestions: false,
-                                              autocorrect: false,
-                                              decoration: InputDecoration(
-                                                label: const Text("Password"),
-                                                errorText:
-                                                    _errorTexts["password"],
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 15),
-                                                suffixIcon: IconButton(
-                                                  icon: HeroIcon((obsecureText)
-                                                      ? HeroIcons.eyeSlash
-                                                      : HeroIcons.eye),
-                                                  iconSize: 16,
-                                                  onPressed: () {
-                                                    _obsecureTextNotifier
-                                                        .value = !obsecureText;
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                    ],
-                                  )),
-                              const SizedBox(height: 40),
-                              PrimaryButton(
-                                onPressed: () {
-                                  // Set the error texts for the email and password.
-                                  _errorTexts["email"] =
-                                      _loginFormValidator.validateEmail(
-                                          _textInputControllers["email"]!.text);
+                                            suffixIcon: IconButton(
+                                              icon: HeroIcon((obsecureText)
+                                                  ? HeroIcons.eyeSlash
+                                                  : HeroIcons.eye),
+                                              iconSize: 16,
+                                              onPressed: () {
+                                                _obsecureTextNotifier.value =
+                                                    !obsecureText;
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ],
+                              )),
+                          const SizedBox(height: 40),
+                          PrimaryButton(
+                            onPressed: () {
+                              // Set the error texts for the email and password.
+                              _errorTexts["email"] =
+                                  _loginFormValidator.validateEmail(
+                                      _textInputControllers["email"]!.text);
 
-                                  _errorTexts["password"] =
-                                      _loginFormValidator.validatePassword(
-                                          _textInputControllers["password"]!
-                                              .text);
+                              _errorTexts["password"] =
+                                  _loginFormValidator.validatePassword(
+                                      _textInputControllers["password"]!.text);
 
-                                  // Validate the form.
-                                  if (!_formKey.currentState!.validate()) {
-                                    return;
-                                  }
+                              // Validate the form.
+                              if (!_formKey.currentState!.validate()) {
+                                return;
+                              }
 
-                                  // Submit the login form.
-                                  controller.login(
-                                    email: _textInputControllers["email"]!.text,
-                                    password:
-                                        _textInputControllers["password"]!.text,
-                                  );
-                                },
-                                style: ButtonStyle(
-                                  minimumSize: WidgetStateProperty.all(
-                                      const Size.fromHeight(0)),
-                                ),
-                                child: const Text("Login"),
-                              )
-                            ],
-                          ));
-                    }),
-                  ),
-                )));
+                              // Submit the login form.
+                              controller.login(
+                                email: _textInputControllers["email"]!.text,
+                                password:
+                                    _textInputControllers["password"]!.text,
+                              );
+                            },
+                            style: ButtonStyle(
+                              minimumSize: WidgetStateProperty.all(
+                                  const Size.fromHeight(0)),
+                            ),
+                            child: const Text("Login"),
+                          )
+                        ],
+                      ));
+                }),
+              ),
+            ));
   }
 }
