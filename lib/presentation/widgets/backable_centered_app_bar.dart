@@ -33,10 +33,19 @@ class BackableCenteredAppBar extends StatelessWidget
   void _showMoreModal(BuildContext context) {
     showBottomModalSheet(
         context,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: moreMenus!,
-        ));
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          for (int i = 0; i < moreMenus!.length; i++) ...[
+            moreMenus![i],
+            if (i != moreMenus!.length - 1) ...[
+              const SizedBox(height: 5),
+              Divider(
+                thickness: 1,
+                color: ColorSchemes.subtle,
+              ),
+              const SizedBox(height: 5),
+            ]
+          ],
+        ]));
   }
 
   @override

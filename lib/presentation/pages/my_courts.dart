@@ -5,6 +5,7 @@ import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.da
 import 'package:courtly_vendor/presentation/widgets/my_courts/court_card.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 /// [MyCourtsPage] is widget that represent my courts page.
 /// It shows the list of courts.
