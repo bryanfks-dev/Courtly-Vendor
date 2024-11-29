@@ -1,19 +1,19 @@
-/// [LoginDTO] is a class that holds the data that is needed to login a vendor.
+/// [LoginFormDTO] is a class that holds the form data that is needed to login a vendor.
 ///
-/// [LoginDTO] takes [email] and [password] as required data
-class LoginDTO {
+/// [LoginFormDTO] takes [email] and [password] as required data
+class LoginFormDTO {
   /// [email] is the phone number of the vendor.
-  final String email;
+  String email;
 
   /// [password] is the password of the vendor.
-  final String password;
+  String password;
 
-  LoginDTO({
+  LoginFormDTO({
     required this.email,
     required this.password,
   });
 
-  /// [toMap] is a method to convert the [LoginDTO] to a map.
+  /// [toMap] is a method to convert the [LoginFormDTO] to a map.
   ///
   /// Returns a map of [String] key and [String] value.
   Map<String, String> toMap() {

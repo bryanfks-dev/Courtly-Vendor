@@ -26,6 +26,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyApp extends State<MyApp> {
+  /// [_currentIndex] is the current index of the page.
+  int _currentIndex = 0;
+
+  /// [_setLoginPage] is a function to set the login page.
+  /// This function sets the current index to 0.
+  ///
+  /// Returns: void
+  void _setLoginPage() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
+
+  /// [_setAppScaffoldPage] is a function to set the app scaffold page.
+  /// This function sets the current index to 1.
+  ///
+  /// Returns: void
+  void _setAppScaffoldPage() {
+    setState(() {
+      _currentIndex = 1;
+    });
+  }
+
+  /// [_pages] is the list of pages in the application.
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the pages
+    _pages = [
+      LoginPage(
+        toAppScaffoldPage: _setAppScaffoldPage,
+      ),
+      const AppScaffold()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,7 +75,7 @@ class _MyApp extends State<MyApp> {
         Routes.myCourts: (context) => MyCourtsPage(),
         Routes.changePassword: (context) => const ChangePasswordPage(),
       },
-      home: const AppScaffold(),
+      home: _pages[_currentIndex],
     );
   }
 }

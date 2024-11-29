@@ -34,7 +34,9 @@ class AppThemes {
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
-          linearTrackColor: ColorSchemes.subtle, color: ColorSchemes.primary),
+          linearTrackColor: ColorSchemes.subtle,
+          color: ColorSchemes.primary,
+          circularTrackColor: ColorSchemes.subtle),
       bottomSheetTheme:
           BottomSheetThemeData(backgroundColor: ColorSchemes.primaryBackground),
       inputDecorationTheme: InputDecorationTheme(
@@ -55,6 +57,10 @@ class AppThemes {
             borderSide: BorderSide(color: ColorSchemes.primary),
           ),
           errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: ColorSchemes.error),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: ColorSchemes.error),
           )),
