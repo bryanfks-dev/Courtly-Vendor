@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Execute the auth usecase
     final bool tokenAvailable = await authUsecase.tokenAvailable();
 
+    // Check if the token is not available
     if (!tokenAvailable) {
       emit(UnauthenticatedState());
 
