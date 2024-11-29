@@ -1,6 +1,6 @@
 import 'package:courtly_vendor/core/config/app_themes.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
-import 'package:courtly_vendor/presentation/pages/court_detail.dart';
+import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
 import 'package:courtly_vendor/presentation/pages/my_courts.dart';
 import 'package:courtly_vendor/presentation/widgets/app_scaffold.dart';
@@ -35,7 +35,7 @@ class _MyApp extends State<MyApp> {
       theme: AppThemes.light,
       routes: {
         Routes.myCourts: (context) => MyCourtsPage(),
-        Routes.detailCourts: (context) => CourtDetail(),
+        Routes.detailCourts: (context) => const MyCourtDetail(),
         Routes.changePassword: (context) => const ChangePasswordPage(),
       },
       home: const AppScaffold(),
