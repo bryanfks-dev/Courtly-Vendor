@@ -22,17 +22,8 @@ class LoginRepository {
     // Make a POST request to the API.
     http.Response res = await _apiRepository
         .post('auth/vendor/login', formDto.toMap())
-        .timeout(
-          const Duration(seconds: 2),
-          onTimeout: () => throw TimeoutException("Cannot connect to server"),
-        );
-
-    // Check if the request is not a redirect.
-    if (!res.isRedirect) {
-      return ResponseDTO(
-          success: false, message: "Cannot send request to server", data: null);
-    }
-
+        .timeout(const Duration(seconds: 2));
+    
     // Parse the response
     ResponseDTO<LoginResponseDTO> responseDto =
         ResponseDTO.fromJson(jsonDecode(res.body), LoginResponseDTO.fromJson);

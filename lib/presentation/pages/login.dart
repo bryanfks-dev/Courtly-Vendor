@@ -32,6 +32,15 @@ class LoginPage extends StatelessWidget {
     "password": TextEditingController(),
   };
 
+  /// [_errorTexts] is the map of error texts.
+  /// This map is used to store the error texts for the text inputs.
+  ///
+  /// The keys are the text input keys and the values are the error texts.
+  final Map<String, String?> _errorTexts = {
+    "email": null,
+    "password": null,
+  };
+
   /// [_obsecureTextNotifier] is the notifier for obsecure text.
   /// This notifier is used to toggle the password visibility.
   final ValueNotifier<bool> _obsecureTextNotifier = ValueNotifier(true);
@@ -47,12 +56,24 @@ class LoginPage extends StatelessWidget {
             listener: (BuildContext context, LoginState state) {
               // Check the state of the login bloc.
               if (state is LoginErrorState) {
+                // Check if the error message is a string.
                 if (state.errorMessage is String) {
+                  // Show the error message in the snackbar.
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(state.errorMessage),
                   ));
 
                   return;
+                }
+
+                // Check if the error message is a map.
+                if (state.errorMessage is Map) {
+                  // Set the error text for the email.
+                  _errorTexts["email"] = state.errorMessage["email"]?.first;
+
+                  // Set the error text for the password.
+                  _errorTexts["password"] =
+                      state.errorMessage["password"]?.first;
                 }
               }
 
@@ -106,16 +127,14 @@ class LoginPage extends StatelessWidget {
                                           controller:
                                               _textInputControllers["email"],
                                           style: const TextStyle(fontSize: 14),
-                                          decoration: const InputDecoration(
-                                            label: Text("Email"),
+                                          decoration: InputDecoration(
+                                            label: const Text("Email"),
+                                            errorText: _errorTexts["email"],
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 0,
                                                     horizontal: 15),
-                                          ),
-                                          validator: (String? value) =>
-                                              _loginFormValidator
-                                                  .validateEmail(value)),
+                                          )),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -134,6 +153,8 @@ class LoginPage extends StatelessWidget {
                                               autocorrect: false,
                                               decoration: InputDecoration(
                                                 label: const Text("Password"),
+                                                errorText:
+                                                    _errorTexts["password"],
                                                 contentPadding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 0,
@@ -149,9 +170,6 @@ class LoginPage extends StatelessWidget {
                                                   },
                                                 ),
                                               ),
-                                              validator: (String? value) =>
-                                                  _loginFormValidator
-                                                      .validatePassword(value),
                                             );
                                           }),
                                     ],
@@ -159,12 +177,20 @@ class LoginPage extends StatelessWidget {
                               const SizedBox(height: 40),
                               PrimaryButton(
                                 onPressed: () {
+                                  // Set the error texts for the email and password.
+                                  _errorTexts["email"] =
+                                      _loginFormValidator.validateEmail(
+                                          _textInputControllers["email"]!.text);
+
+                                  _errorTexts["password"] =
+                                      _loginFormValidator.validatePassword(
+                                          _textInputControllers["password"]!
+                                              .text);
+
                                   // Validate the form.
                                   if (!_formKey.currentState!.validate()) {
                                     return;
                                   }
-
-                                  print("Heelo");
 
                                   // Submit the login form.
                                   controller.login(

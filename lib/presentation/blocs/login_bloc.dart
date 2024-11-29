@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:courtly_vendor/data/dto/login_form_dto.dart';
 import 'package:courtly_vendor/data/dto/login_response_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
@@ -39,6 +42,10 @@ class LoginBloc extends Cubit<LoginState> {
       }
 
       emit(LoginSuccessState());
+    } on SocketException catch (_) {
+      emit(LoginErrorState(errorMessage: "Invalid server address"));
+    } on TimeoutException catch (_) {
+      emit(LoginErrorState(errorMessage: "Request timeout"));
     } catch (e) {
       emit(LoginErrorState(errorMessage: e.toString()));
     }

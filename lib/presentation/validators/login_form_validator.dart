@@ -7,12 +7,7 @@ class LoginFormValidator {
   /// It checks if the email is valid or not.
   ///
   /// Returns a [String] message.
-  String? validateEmail(String? email) {
-    // Check if the email is null.
-    if (email == null) {
-      return "Email is required";
-    }
-
+  String? validateEmail(String email) {
     // Check if the email is empty.
     if (email.trim().isEmpty) {
       return "Email cannot be empty";
@@ -30,9 +25,9 @@ class LoginFormValidator {
   /// It checks if the password is valid or not.
   ///
   /// Returns a [String] message.
-  String? validatePassword(String? password) {
-    // Check if the password is null.
-    if (password == null) {
+  String? validatePassword(String password) {
+    // Check if the password is empty.
+    if (password.isEmpty) {
       return "Password is required";
     }
 
