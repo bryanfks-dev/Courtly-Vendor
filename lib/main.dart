@@ -28,7 +28,7 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp> {
   /// [_currentIndex] is the current index of the page.
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   /// [_setLoginPage] is a function to set the login page.
   /// This function sets the current index to 0.

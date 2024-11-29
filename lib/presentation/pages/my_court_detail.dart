@@ -1,6 +1,9 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
+import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
+import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -15,45 +18,135 @@ class MyCourtDetail extends StatefulWidget {
 }
 
 class _CourtDetailState extends State<MyCourtDetail> {
+  void openDeleteModal(BuildContext context) {
+    // Open the logout modal.
+    showBottomModalSheet(
+        context,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Select Court(s)", style: TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(
+              height: 15,
+            ),
+            const SizedBox(
+              height: 100,
+              child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 10,
+                    children: [
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+                Chip(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  label: Text("Court 1"),
+                ),
+              ])),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SecondaryButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                        side: WidgetStatePropertyAll(BorderSide(
+                            width: 1, color: ColorSchemes.highlight)),
+                        minimumSize:
+                            const WidgetStatePropertyAll(Size.fromHeight(0))),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: ColorSchemes.highlight,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    )),
+                const SizedBox(
+                  height: 4,
+                ),
+                PrimaryButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStateProperty.all(ColorSchemes.error),
+                        minimumSize:
+                            WidgetStateProperty.all(const Size.fromHeight(0))),
+                    child: const Text("Delete",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)))
+              ],
+            )
+          ],
+        ));
+  }
+
   /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
-  final List<Widget> _moreMenus = [
-    InkWell(
-      onTap: () {},
-      child: Row(
-        children: [
-          HeroIcon(
-            HeroIcons.plus,
-            color: ColorSchemes.primary,
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          const Text(
-            "Add New Court",
-            style: TextStyle(fontSize: 14),
-          )
-        ],
-      ),
-    ),
-    InkWell(
-      onTap: () {},
-      child: Row(
-        children: [
-          HeroIcon(
-            HeroIcons.trash,
-            color: ColorSchemes.primary,
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          const Text(
-            "Delete Courts",
-            style: TextStyle(fontSize: 14),
-          )
-        ],
-      ),
-    )
-  ];
+  late List<Widget> _moreMenus;
 
   /// [_gridBoxWidth] is the width of the grid box.
   final double _gridBoxWidth = 90;
@@ -106,6 +199,46 @@ class _CourtDetailState extends State<MyCourtDetail> {
   @override
   void initState() {
     super.initState();
+    _moreMenus = [
+      InkWell(
+        onTap: () {},
+        child: Row(
+          children: [
+            HeroIcon(
+              HeroIcons.plus,
+              color: ColorSchemes.primary,
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            const Text(
+              "Add New Court",
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+      ),
+      InkWell(
+        onTap: () {
+          openDeleteModal(context);
+        },
+        child: Row(
+          children: [
+            HeroIcon(
+              HeroIcons.trash,
+              color: ColorSchemes.primary,
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            const Text(
+              "Delete Courts",
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+      )
+    ];
 
     _initializeSchedule();
   }
