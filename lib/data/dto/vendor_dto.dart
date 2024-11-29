@@ -1,7 +1,7 @@
 /// [VendorDTO] is a data transfer object for vendor.
 class VendorDTO {
   /// [id] is the id of the vendor.
-  final String id;
+  final int id;
 
   /// [name] is the name of the vendor.
   final String name;

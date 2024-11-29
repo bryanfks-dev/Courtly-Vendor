@@ -33,7 +33,6 @@ class LoginBloc extends Cubit<LoginState> {
       // Execute the login usecase
       final ResponseDTO<LoginResponseDTO> res =
           await loginUsecase.execute(formDto);
-
       // Check if the response is not successful
       if (!res.success) {
         emit(LoginErrorState(errorMessage: res.message));
@@ -47,6 +46,7 @@ class LoginBloc extends Cubit<LoginState> {
     } on TimeoutException catch (_) {
       emit(LoginErrorState(errorMessage: "Request timeout"));
     } catch (e) {
+      print(e);
       emit(LoginErrorState(errorMessage: e.toString()));
     }
   }

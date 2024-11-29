@@ -77,6 +77,7 @@ class LoginPage extends StatelessWidget {
                 }
               }
 
+              // Check if the login is successful.
               if (state is LoginSuccessState) {
                 toAppScaffoldPage();
               }

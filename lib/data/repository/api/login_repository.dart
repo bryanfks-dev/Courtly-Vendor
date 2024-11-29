@@ -23,7 +23,7 @@ class LoginRepository {
     http.Response res = await _apiRepository
         .post('auth/vendor/login', formDto.toMap())
         .timeout(const Duration(seconds: 2));
-    
+
     // Parse the response
     ResponseDTO<LoginResponseDTO> responseDto =
         ResponseDTO.fromJson(jsonDecode(res.body), LoginResponseDTO.fromJson);
