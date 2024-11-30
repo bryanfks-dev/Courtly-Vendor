@@ -2,6 +2,7 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/my_court_detail/delete_chip.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
@@ -18,89 +19,50 @@ class MyCourtDetail extends StatefulWidget {
 }
 
 class _CourtDetailState extends State<MyCourtDetail> {
+  /// [_courts] is a list of courts.
+  List<dynamic> _courts = [
+    "Court 1",
+    "Court 2",
+    "Court 3",
+    "Court 4",
+    "Court 5",
+    "Court 6",
+    "Court 7",
+    "Court 8",
+    "Court 9",
+    "Court 10",
+  ];
+
+  /// [openDeleteModal] is a function that opens the delete modal.
+  /// This function will open a modal that allows the user to select the courts to delete.
+  ///
+  /// Parameters:
+  ///   - [context]: The build context.
+  ///
+  /// Returns: [void]
   void openDeleteModal(BuildContext context) {
-    // Open the logout modal.
     showBottomModalSheet(
         context,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Select Court(s)", style: TextStyle(fontWeight: FontWeight.w600)),
+            Text("Select Court(s)",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: ColorSchemes.text,
+                    fontWeight: FontWeight.w600)),
             const SizedBox(
-              height: 15,
+              height: 14,
             ),
-            const SizedBox(
+            SizedBox(
               height: 100,
               child: SingleChildScrollView(
                   child: Wrap(
-                    spacing: 10,
-                    children: [
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-                Chip(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(999))),
-                  label: Text("Court 1"),
-                ),
-              ])),
+                      spacing: 6,
+                      children: _courts
+                          .map((item) =>
+                              DeleteChip(label: "Court 1", onTap: () {}))
+                          .toList())),
             ),
             const SizedBox(
               height: 15,
@@ -159,8 +121,6 @@ class _CourtDetailState extends State<MyCourtDetail> {
 
   DateTime selectedDate = DateTime.now();
 
-  final List<String> courts = ['Court 1', 'Court 2', 'Court 3', 'Court 4'];
-
   final List<DateTime> weekDays =
       List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
@@ -192,13 +152,15 @@ class _CourtDetailState extends State<MyCourtDetail> {
 
     schedules[dateKey] = List.generate(
       timeSlots.length,
-      (_) => List.generate(courts.length, (_) => false),
+      (_) => List.generate(_courts.length, (_) => false),
     );
   }
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize the more menus
     _moreMenus = [
       InkWell(
         onTap: () {},
@@ -267,7 +229,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   List<Widget> _getTitleWidget() {
     return [
       _getTitleItemWidget(label: 'Time', width: _timeColumnWidth),
-      ...courts.map(
+      ..._courts.map(
           (court) => _getTitleItemWidget(label: court, width: _gridBoxWidth)),
     ];
   }
@@ -314,7 +276,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// Returns: [Widget]
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
     return Row(
-      children: List.generate(courts.length, (colIndex) {
+      children: List.generate(_courts.length, (colIndex) {
         return GestureDetector(
           child: Container(
             width: _gridBoxWidth,
@@ -447,7 +409,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
           Expanded(
               child: HorizontalDataTable(
             leftHandSideColumnWidth: _timeColumnWidth,
-            rightHandSideColumnWidth: courts.length * _gridBoxWidth,
+            rightHandSideColumnWidth: _courts.length * _gridBoxWidth,
             isFixedHeader: true,
             headerWidgets: _getTitleWidget(),
             leftSideItemBuilder: _generateFirstColumnRow,
