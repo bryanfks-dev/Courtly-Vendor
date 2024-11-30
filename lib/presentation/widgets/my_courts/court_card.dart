@@ -1,4 +1,5 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
+import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 class CourtCard extends StatelessWidget {
@@ -15,7 +16,9 @@ class CourtCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.detailCourts);
+        },
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(

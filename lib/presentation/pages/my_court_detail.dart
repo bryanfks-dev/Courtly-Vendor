@@ -1,6 +1,10 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
+import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/my_court_detail/delete_chip.dart';
+import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
+import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -15,45 +19,96 @@ class MyCourtDetail extends StatefulWidget {
 }
 
 class _CourtDetailState extends State<MyCourtDetail> {
-  /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
-  final List<Widget> _moreMenus = [
-    InkWell(
-      onTap: () {},
-      child: Row(
-        children: [
-          HeroIcon(
-            HeroIcons.plus,
-            color: ColorSchemes.primary,
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          const Text(
-            "Add New Court",
-            style: TextStyle(fontSize: 14),
-          )
-        ],
-      ),
-    ),
-    InkWell(
-      onTap: () {},
-      child: Row(
-        children: [
-          HeroIcon(
-            HeroIcons.trash,
-            color: ColorSchemes.primary,
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          const Text(
-            "Delete Courts",
-            style: TextStyle(fontSize: 14),
-          )
-        ],
-      ),
-    )
+  /// [_courts] is a list of courts.
+  List<dynamic> _courts = [
+    "Court 1",
+    "Court 2",
+    "Court 3",
+    "Court 4",
+    "Court 5",
+    "Court 6",
+    "Court 7",
+    "Court 8",
+    "Court 9",
+    "Court 10",
   ];
+
+  /// [openDeleteModal] is a function that opens the delete modal.
+  /// This function will open a modal that allows the user to select the courts to delete.
+  ///
+  /// Parameters:
+  ///   - [context]: The build context.
+  ///
+  /// Returns: [void]
+  void openDeleteModal(BuildContext context) {
+    showBottomModalSheet(
+        context,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Select Court(s)",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: ColorSchemes.text,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(
+              height: 14,
+            ),
+            SizedBox(
+              height: 100,
+              child: SingleChildScrollView(
+                  child: Wrap(
+                      spacing: 6,
+                      children: _courts
+                          .map((item) =>
+                              DeleteChip(label: "Court 1", onTap: () {}))
+                          .toList())),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SecondaryButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                        side: WidgetStatePropertyAll(BorderSide(
+                            width: 1, color: ColorSchemes.highlight)),
+                        minimumSize:
+                            const WidgetStatePropertyAll(Size.fromHeight(0))),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: ColorSchemes.highlight,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    )),
+                const SizedBox(
+                  height: 4,
+                ),
+                PrimaryButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStateProperty.all(ColorSchemes.error),
+                        minimumSize:
+                            WidgetStateProperty.all(const Size.fromHeight(0))),
+                    child: const Text("Delete",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)))
+              ],
+            )
+          ],
+        ));
+  }
+
+  /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
+  late List<Widget> _moreMenus;
 
   /// [_gridBoxWidth] is the width of the grid box.
   final double _gridBoxWidth = 90;
@@ -65,8 +120,6 @@ class _CourtDetailState extends State<MyCourtDetail> {
   final double _timeColumnWidth = 70;
 
   DateTime selectedDate = DateTime.now();
-
-  final List<String> courts = ['Court 1', 'Court 2', 'Court 3', 'Court 4'];
 
   final List<DateTime> weekDays =
       List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
@@ -99,13 +152,55 @@ class _CourtDetailState extends State<MyCourtDetail> {
 
     schedules[dateKey] = List.generate(
       timeSlots.length,
-      (_) => List.generate(courts.length, (_) => false),
+      (_) => List.generate(_courts.length, (_) => false),
     );
   }
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize the more menus
+    _moreMenus = [
+      InkWell(
+        onTap: () {},
+        child: Row(
+          children: [
+            HeroIcon(
+              HeroIcons.plus,
+              color: ColorSchemes.primary,
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            const Text(
+              "Add New Court",
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+      ),
+      InkWell(
+        onTap: () {
+          openDeleteModal(context);
+        },
+        child: Row(
+          children: [
+            HeroIcon(
+              HeroIcons.trash,
+              color: ColorSchemes.primary,
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            const Text(
+              "Delete Courts",
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+      )
+    ];
 
     _initializeSchedule();
   }
@@ -134,7 +229,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   List<Widget> _getTitleWidget() {
     return [
       _getTitleItemWidget(label: 'Time', width: _timeColumnWidth),
-      ...courts.map(
+      ..._courts.map(
           (court) => _getTitleItemWidget(label: court, width: _gridBoxWidth)),
     ];
   }
@@ -181,7 +276,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// Returns: [Widget]
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
     return Row(
-      children: List.generate(courts.length, (colIndex) {
+      children: List.generate(_courts.length, (colIndex) {
         return GestureDetector(
           child: Container(
             width: _gridBoxWidth,
@@ -314,7 +409,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
           Expanded(
               child: HorizontalDataTable(
             leftHandSideColumnWidth: _timeColumnWidth,
-            rightHandSideColumnWidth: courts.length * _gridBoxWidth,
+            rightHandSideColumnWidth: _courts.length * _gridBoxWidth,
             isFixedHeader: true,
             headerWidgets: _getTitleWidget(),
             leftSideItemBuilder: _generateFirstColumnRow,
