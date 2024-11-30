@@ -7,11 +7,11 @@ import 'package:http/http.dart' as http;
 class ApiRepository {
   /// [_baseUrl] is the base URL of the API.
   /// This base URL is used to make the API request.
-  static const String _baseUrl = "http://192.168.1.83:3000/api/v1";
+  static const String _baseUrl = "http://192.168.1.4:3000/api/v1";
 
-  /// [_jwtToken] is the JWT token for the API request.
+  /// [_token] is the JWT token for the API request.
   /// This JWT token is used to authenticate the API request.
-  static String? _jwtToken;
+  String? _token;
 
   /// [_headers] is the headers for the API request.
   /// This headers is used to set the headers for the API request.
@@ -20,12 +20,12 @@ class ApiRepository {
     'Accept': 'application/json',
   };
 
-  // Constructor for the ApiRepository.
-  ApiRepository({String? jwtToken}) {
-    _jwtToken = jwtToken;
-
-    // Set the JWT token in the headers.
-    _headers['Authorization'] = 'Bearer $_jwtToken';
+  /// [setJwtToken] is a function to set the JWT token for the API request.
+  /// This function is used to set the JWT token for the API request.
+  ///
+  /// Returns a [void].
+  void setJwtToken(String? jwtToken) {
+    _token = jwtToken;
   }
 
   /// [get] is a function to make a GET request to the API.
@@ -34,8 +34,10 @@ class ApiRepository {
   /// Returns a [Future] of [http.Response].
   Future<http.Response> get(String endpoint) async {
     /// Make a GET request to the API.
-    final res =
-        await http.get(Uri.parse('$_baseUrl/$endpoint'), headers: _headers);
+    final res = await http.get(Uri.parse('$_baseUrl/$endpoint'), headers: {
+      ..._headers,
+      if (_token != null) 'Authorization': 'Bearer $_token',
+    });
 
     return res;
   }
@@ -48,7 +50,11 @@ class ApiRepository {
   Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
     /// Make a POST request to the API.
     final res = await http.post(Uri.parse('$_baseUrl/$endpoint'),
-        headers: _headers, body: json.encode(body));
+        headers: {
+          ..._headers,
+          if (_token != null) 'Authorization': 'Bearer $_token',
+        },
+        body: json.encode(body));
 
     return res;
   }
@@ -62,7 +68,11 @@ class ApiRepository {
       String endpoint, Map<String, dynamic> body) async {
     /// Make a PATCH request to the API.
     final res = await http.patch(Uri.parse('$_baseUrl/$endpoint'),
-        headers: _headers, body: json.encode(body));
+        headers: {
+          ..._headers,
+          if (_token != null) 'Authorization': 'Bearer $_token',
+        },
+        body: json.encode(body));
 
     return res;
   }

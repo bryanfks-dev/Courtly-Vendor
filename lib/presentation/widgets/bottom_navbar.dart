@@ -1,5 +1,5 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
-import 'package:courtly_vendor/domain/entities/page_props.dart';
+import 'package:courtly_vendor/domain/props/page_props.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavbar extends StatelessWidget {

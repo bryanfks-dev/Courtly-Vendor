@@ -1,12 +1,15 @@
 import 'package:courtly_vendor/core/config/app_themes.dart';
 import 'package:courtly_vendor/data/repository/api/login_repository.dart';
+import 'package:courtly_vendor/data/repository/api/vendor_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:courtly_vendor/domain/usercases/auth_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
+import 'package:courtly_vendor/domain/usercases/vendor_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
 import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
@@ -91,6 +94,10 @@ class _MyApp extends State<MyApp> {
                 loginUsecase: LoginUsecase(
                     tokenRepository: TokenRepository(),
                     loginRepository: LoginRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => VendorBloc(
+                vendorUsecase:
+                    VendorUsecase(vendorRepository: VendorRepository()))),
       ],
       child: BlocListener<AuthBloc, AuthState>(
         listener: (BuildContext context, AuthState state) {
