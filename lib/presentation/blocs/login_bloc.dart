@@ -36,5 +36,7 @@ class LoginBloc extends Cubit<LoginState> {
 
       return;
     }
+
+    emit(LoginSuccessState());
   }
 }
