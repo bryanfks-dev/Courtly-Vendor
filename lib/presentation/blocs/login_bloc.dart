@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/login_form_dto.dart';
-import 'package:courtly_vendor/data/dto/login_response_dto.dart';
-import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,24 +27,14 @@ class LoginBloc extends Cubit<LoginState> {
     // Create a new instance of [LoginResponseDTO]
     final formDto = LoginFormDTO(email: email, password: password);
 
-    try {
-      // Execute the login usecase
-      final ResponseDTO<LoginResponseDTO> res =
-          await loginUsecase.execute(formDto);
-      // Check if the response is not successful
-      if (!res.success) {
-        emit(LoginErrorState(errorMessage: res.message));
+    // Execute the login usecase
+    final Failure? fail = await loginUsecase.login(formDto);
 
-        return;
-      }
+    // Check if the response is not successful
+    if (fail != null) {
+      emit(LoginErrorState(errorMessage: fail.errorMessage));
 
-      emit(LoginSuccessState());
-    } on SocketException catch (_) {
-      emit(LoginErrorState(errorMessage: "Invalid server address"));
-    } on TimeoutException catch (_) {
-      emit(LoginErrorState(errorMessage: "Request timeout"));
-    } catch (e) {
-      emit(LoginErrorState(errorMessage: e.toString()));
+      return;
     }
   }
 }
