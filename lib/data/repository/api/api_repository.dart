@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:http/http.dart' as http;
 
 /// [ApiRepository] is a repository to handle API requests.
@@ -20,19 +21,25 @@ class ApiRepository {
     'Accept': 'application/json',
   };
 
-  /// [setJwtToken] is a function to set the JWT token for the API request.
-  /// This function is used to set the JWT token for the API request.
-  ///
-  /// Returns a [void].
-  void setJwtToken(String? jwtToken) {
-    _token = jwtToken;
+  /// [setTokenFromStorage] is a function to set the JWT token from the storage.
+  Future<void> setTokenFromStorage(
+      {required TokenRepository tokenRepository}) async {
+    // Get the token from the repository
+    final String? token = await tokenRepository.getToken();
+
+    // Check if the token is null
+    if (token == null) {
+      return;
+    }
+
+    _token = token;
   }
 
   /// [get] is a function to make a GET request to the API.
   /// This function will make a GET request to the API with the given endpoint.
   ///
   /// Returns a [Future] of [http.Response].
-  Future<http.Response> get(String endpoint) async {
+  Future<http.Response> get({required String endpoint}) async {
     /// Make a GET request to the API.
     final res = await http.get(Uri.parse('$_baseUrl/$endpoint'), headers: {
       ..._headers,
@@ -47,7 +54,8 @@ class ApiRepository {
   /// The [body] parameter is the data that will be sent to the API.
   ///
   /// Returns a [Future] of [http.Response].
-  Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
+  Future<http.Response> post(
+      {required String endpoint, required Map<String, dynamic> body}) async {
     /// Make a POST request to the API.
     final res = await http.post(Uri.parse('$_baseUrl/$endpoint'),
         headers: {
@@ -65,7 +73,7 @@ class ApiRepository {
   ///
   /// Returns a [Future] of [http.Response].
   Future<http.Response> patch(
-      String endpoint, Map<String, dynamic> body) async {
+      {required String endpoint, required Map<String, dynamic> body}) async {
     /// Make a PATCH request to the API.
     final res = await http.patch(Uri.parse('$_baseUrl/$endpoint'),
         headers: {

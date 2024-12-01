@@ -23,7 +23,8 @@ class VendorBloc extends Cubit<VendorState> {
     final Either<Failure, Vendor> res = await vendorUsecase.getVendor();
 
     res.fold(
-        (failure) => emit(VendorErrorState(errorMessage: failure.errorMessage)),
+        (failure) => emit(
+            VendorErrorState(errorMessage: failure.errorMessage.toString())),
         (vendor) => emit(VendorLoadedState(vendor: vendor)));
   }
 }

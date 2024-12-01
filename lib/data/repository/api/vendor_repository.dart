@@ -15,26 +15,16 @@ class VendorRepository {
   /// [_apiRepository] is the API repository.
   final ApiRepository _apiRepository = ApiRepository();
 
-  /// [_initializeToken] is a method to initialize the token.
-  ///
-  /// Returns a [Future] of [Void].
-  Future<void> _initializeToken() async {
-    // Get the token from the repository
-    String? token = await _tokenRepository.getToken();
-
-    // Set the token in the API repository
-    _apiRepository.setJwtToken(token);
-  }
-
   /// [getVendor] is a function to make a POST request to the API.
   ///
   /// Returns a [VendorResponseDTO] object.
   Future<ResponseDTO<VendorResponseDTO>> getVendor() async {
-    await _initializeToken();
+    // Set the token from the storage
+    await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
     // Make a POST request to the API.
     http.Response res = await _apiRepository
-        .get('vendors/me')
+        .get(endpoint: 'vendors/me')
         .timeout(const Duration(seconds: 2));
 
     // Parse the response

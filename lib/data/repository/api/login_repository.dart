@@ -18,10 +18,11 @@ class LoginRepository {
   ///   - [formDto] is the login form data.
   ///
   /// Returns a [ResponseDTO] object.
-  Future<ResponseDTO<LoginResponseDTO>> postLogin(LoginFormDTO formDto) async {
+  Future<ResponseDTO<LoginResponseDTO>> postLogin(
+      {required LoginFormDTO formDto}) async {
     // Make a POST request to the API.
     http.Response res = await _apiRepository
-        .post('auth/vendor/login', formDto.toMap())
+        .post(endpoint: 'auth/vendor/login', body: formDto.toMap())
         .timeout(const Duration(seconds: 2));
 
     // Parse the response

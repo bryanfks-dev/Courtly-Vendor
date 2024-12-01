@@ -28,7 +28,7 @@ class LoginUsecase {
     try {
       // Make a POST request to the API.
       ResponseDTO<LoginResponseDTO> res =
-          await loginRepository.postLogin(formDto);
+          await loginRepository.postLogin(formDto: formDto);
 
       // Check if the request is successful.
       if (!res.success) {
