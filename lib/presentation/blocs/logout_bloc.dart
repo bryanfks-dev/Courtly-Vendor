@@ -22,15 +22,10 @@ class LogoutBloc extends Cubit<LogoutState> {
     // Check if the request is successful.
     if (failure != null) {
       emit(LogoutErrorState(errorMessage: failure.errorMessage));
+
+      return;
     }
 
     emit(LogoutSuccessState());
-  }
-
-  /// [clearToken] is a function to clear the token.
-  ///
-  /// Returns a [Future] of [void].
-  Future<void> clearToken() async {
-    await logoutUsecase.clearToken();
   }
 }

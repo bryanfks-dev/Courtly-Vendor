@@ -4,16 +4,23 @@ import 'dart:io';
 import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
+import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:http/http.dart' as http;
 
 class LogoutRepository {
   /// [ApiRepository] is the repository class for the API
   final ApiRepository _apiRepository = ApiRepository();
 
+  /// [TokenRepository] is the repository class for the token storage.
+  final TokenRepository _tokenRepository = TokenRepository();
+
   /// [postLogout] is a function to make a POST request to the API.
   ///
   ///
   Future<Failure?> postLogout() async {
+    // Set the token from the storage.
+    await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
+
     try {
       // Make a POST request to the API.
       final http.Response res = await _apiRepository

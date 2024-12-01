@@ -79,28 +79,23 @@ class _MyApp extends State<MyApp> {
                     logoutRepository: LogoutRepository(),
                     tokenRepository: TokenRepository())))
       ],
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (BuildContext context, AuthState state) {
-          // Check for authentication state
-          if (state is UnauthenticatedState) {
-            Navigator.pushReplacementNamed(context, Routes.login);
-
-            return;
-          }
+      child: MaterialApp(
+        title: 'Courtly Vendor',
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.light,
+        routes: {
+          Routes.myCourts: (context) => MyCourtsPage(),
+          Routes.detailCourts: (context) => const MyCourtDetail(),
+          Routes.changePassword: (context) => const ChangePasswordPage(),
         },
-        child: MaterialApp(
-          title: 'Courtly Vendor',
-          initialRoute: Routes.home,
-          debugShowCheckedModeBanner: false,
-          theme: AppThemes.light,
-          routes: {
-            Routes.login: (context) => LoginPage(),
-            Routes.home: (context) => const AppScaffold(),
-            Routes.myCourts: (context) => MyCourtsPage(),
-            Routes.detailCourts: (context) => const MyCourtDetail(),
-            Routes.changePassword: (context) => const ChangePasswordPage(),
-          },
-        ),
+        home: BlocBuilder<AuthBloc, AuthState>(
+            builder: (BuildContext context, AuthState state) {
+          if (state is AuthenticatedState) {
+            return const AppScaffold();
+          }
+
+          return LoginPage();
+        }),
       ),
     );
   }

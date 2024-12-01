@@ -20,14 +20,14 @@ class LogoutUsecase {
     // Make a POST request to the API.
     final Failure? failure = await logoutRepository.postLogout();
 
-    return failure;
-  }
+    // Check if the request is successful.
+    if (failure != null) {
+      return failure;
+    }
 
-  /// [clearToken] is a function to clear the token.
-  ///
-  /// Returns [Future] of [void].
-  Future<void> clearToken() async {
-    // Clear the token.
+    // Clear the token from the storage.
     await tokenRepository.clearToken();
+
+    return null;
   }
 }
