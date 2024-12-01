@@ -1,9 +1,6 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
-import 'package:courtly_vendor/data/repository/api/logout_repository.dart';
-import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:courtly_vendor/domain/entities/vendor.dart';
-import 'package:courtly_vendor/domain/usercases/logout_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/logout_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/vendor_state.dart';
@@ -44,92 +41,87 @@ class _VendorProfilePage extends State<VendorProfilePage> {
     // Open the logout modal.
     showBottomModalSheet(
         context,
-        BlocProvider(
-            create: (BuildContext context) => LogoutBloc(
-                logoutUsecase: LogoutUsecase(
-                    logoutRepository: LogoutRepository(),
-                    tokenRepository: TokenRepository())),
-            child: BlocConsumer<LogoutBloc, LogoutState>(
-                listener: (BuildContext context, LogoutState state) {
-              // Handle the state
-              if (state is LogoutSuccessState) {
-                // Clear the token
-                logoutController.clearToken();
+        BlocConsumer<LogoutBloc, LogoutState>(
+            listener: (BuildContext context, LogoutState state) {
+          // Handle the state
+          if (state is LogoutSuccessState) {
+            // Clear the token
+            logoutController.clearToken();
 
-                // Navigate to the login page
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.login, (Route<dynamic> route) => false);
-              }
+            // Navigate to the login page
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.login, (Route<dynamic> route) => false);
+          }
 
-              if (state is LogoutErrorState) {
-                Navigator.pop(context);
+          if (state is LogoutErrorState) {
+            Navigator.pop(context);
 
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.errorMessage)));
-              }
-            }, builder: (BuildContext context, LogoutState state) {
-              // Check the state
-              if (state is LogoutLoadingState) {
-                return const CircularProgressIndicator();
-              }
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+        }, builder: (BuildContext context, LogoutState state) {
+          // Check the state
+          if (state is LogoutLoadingState) {
+            return const CircularProgressIndicator();
+          }
 
-              return Column(
+          return Column(
+            children: [
+              Text.rich(
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: ColorSchemes.text),
+                  TextSpan(text: "You are about to ", children: [
+                    TextSpan(
+                        text: "log out",
+                        style: TextStyle(color: ColorSchemes.error)),
+                    const TextSpan(text: ", confirm to proceed.")
+                  ])),
+              const SizedBox(
+                height: 30,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text.rich(
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: ColorSchemes.text),
-                      TextSpan(text: "You are about to ", children: [
-                        TextSpan(
-                            text: "log out",
-                            style: TextStyle(color: ColorSchemes.error)),
-                        const TextSpan(text: ", confirm to proceed.")
-                      ])),
+                  SecondaryButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                          side: WidgetStatePropertyAll(BorderSide(
+                              width: 1, color: ColorSchemes.highlight)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size.fromHeight(0))),
+                      child: Text(
+                        "I changed my mind",
+                        style: TextStyle(
+                            color: ColorSchemes.highlight,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      )),
                   const SizedBox(
-                    height: 30,
+                    height: 4,
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SecondaryButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ButtonStyle(
-                              side: WidgetStatePropertyAll(BorderSide(
-                                  width: 1, color: ColorSchemes.highlight)),
-                              minimumSize: const WidgetStatePropertyAll(
-                                  Size.fromHeight(0))),
-                          child: Text(
-                            "I changed my mind",
-                            style: TextStyle(
-                                color: ColorSchemes.highlight,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          )),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      PrimaryButton(
-                          onPressed: () {
-                            logoutController.logout();
-                          },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStateProperty.all(ColorSchemes.error),
-                              minimumSize: WidgetStateProperty.all(
-                                  const Size.fromHeight(0))),
-                          child: const Text("Log me out",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500)))
-                    ],
-                  )
+                  PrimaryButton(
+                      onPressed: () {
+                        logoutController.logout();
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStateProperty.all(ColorSchemes.error),
+                          minimumSize: WidgetStateProperty.all(
+                              const Size.fromHeight(0))),
+                      child: const Text("Log me out",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500)))
                 ],
-              );
-            })));
+              )
+            ],
+          );
+        }));
   }
 
   @override
