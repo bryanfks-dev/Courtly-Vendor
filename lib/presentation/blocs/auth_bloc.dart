@@ -1,6 +1,6 @@
 import 'package:courtly_vendor/domain/usercases/auth_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
-import 'package:courtly_vendor/presentation/blocs/states/auth_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// [AuthBloc] is the bloc for authentication.

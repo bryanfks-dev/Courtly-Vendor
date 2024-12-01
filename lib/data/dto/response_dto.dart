@@ -16,7 +16,8 @@ class ResponseDTO<T> {
   ///
   /// Returns a [ResponseDTO] object.
   factory ResponseDTO.fromJson(
-      Map<String, dynamic> json, T Function(Map<String, dynamic>) fromJsonT) {
+      {required Map<String, dynamic> json,
+      T Function(Map<String, dynamic>)? fromJsonT}) {
     // Check if the data is null.
     if (json['data'] == null) {
       return ResponseDTO(
@@ -29,7 +30,7 @@ class ResponseDTO<T> {
     return ResponseDTO(
       success: json['success'],
       message: json['message'],
-      data: fromJsonT(json['data']),
+      data: fromJsonT!(json['data']),
     );
   }
 }

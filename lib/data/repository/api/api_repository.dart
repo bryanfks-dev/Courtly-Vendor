@@ -55,7 +55,7 @@ class ApiRepository {
   ///
   /// Returns a [Future] of [http.Response].
   Future<http.Response> post(
-      {required String endpoint, required Map<String, dynamic> body}) async {
+      {required String endpoint, Map<String, dynamic>? body}) async {
     /// Make a POST request to the API.
     final res = await http.post(Uri.parse('$_baseUrl/$endpoint'),
         headers: {

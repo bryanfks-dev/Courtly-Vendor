@@ -34,7 +34,7 @@ class VendorRepository {
 
       // Parse the response
       final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
-          jsonDecode(res.body), VendorResponseDTO.fromJson);
+          json: jsonDecode(res.body), fromJsonT: VendorResponseDTO.fromJson);
 
       // Check if the response is successful
       if (responseDto.success) {

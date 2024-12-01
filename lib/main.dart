@@ -13,7 +13,7 @@ import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/change_password_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
-import 'package:courtly_vendor/presentation/blocs/states/auth_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
 import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
@@ -87,7 +87,7 @@ class _MyApp extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(
+        BlocProvider(
           create: (BuildContext context) => AuthBloc(
             authUsecase: AuthUsecase(
               tokenRepository: TokenRepository(),
@@ -108,7 +108,7 @@ class _MyApp extends State<MyApp> {
                 verifyPasswordUsecase: VerifyPasswordUsecase(
                     verifyPasswordRepository: VerifyPasswordRepository()),
                 changePasswordUsecase: ChangePasswordUsecase(
-                    changePasswordRepository: ChangePasswordRepository())))
+                    changePasswordRepository: ChangePasswordRepository()))),
       ],
       child: BlocListener<AuthBloc, AuthState>(
         listener: (BuildContext context, AuthState state) {
@@ -127,9 +127,14 @@ class _MyApp extends State<MyApp> {
         },
         child: MaterialApp(
           title: 'Courtly Vendor',
+          initialRoute: Routes.login,
           debugShowCheckedModeBanner: false,
           theme: AppThemes.light,
           routes: {
+            Routes.login: (context) => LoginPage(
+                  toAppScaffoldPage: _setAppScaffoldPage,
+                ),
+            Routes.home: (context) => const AppScaffold(),
             Routes.myCourts: (context) => MyCourtsPage(),
             Routes.detailCourts: (context) => const MyCourtDetail(),
             Routes.changePassword: (context) => const ChangePasswordPage(),

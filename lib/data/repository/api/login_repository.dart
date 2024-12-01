@@ -30,8 +30,8 @@ class LoginRepository {
           .timeout(const Duration(seconds: 2));
 
       // Parse the response
-      ResponseDTO<LoginResponseDTO> responseDto =
-          ResponseDTO.fromJson(jsonDecode(res.body), LoginResponseDTO.fromJson);
+      ResponseDTO<LoginResponseDTO> responseDto = ResponseDTO.fromJson(
+          json: jsonDecode(res.body), fromJsonT: LoginResponseDTO.fromJson);
 
       // Check if the response is successful
       if (responseDto.success) {
