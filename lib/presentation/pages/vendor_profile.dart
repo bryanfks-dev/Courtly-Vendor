@@ -178,28 +178,12 @@ class _VendorProfilePage extends State<VendorProfilePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            vendor.name,
-                            style: TextStyle(
-                                color: ColorSchemes.text,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              "Edit Profile",
-                              style: TextStyle(
-                                  color: ColorSchemes.primary,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: ColorSchemes.primary),
-                            ),
-                          )
-                        ],
+                      Text(
+                        vendor.name,
+                        style: TextStyle(
+                            color: ColorSchemes.text,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18),
                       ),
                       const SizedBox(height: 15),
                       Column(
