@@ -65,7 +65,9 @@ class _VendorProfilePage extends State<VendorProfilePage> {
       }, builder: (BuildContext context, LogoutState state) {
         // Check the state
         if (state is LogoutLoadingState) {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         return Column(
