@@ -21,7 +21,7 @@ class VerifyPasswordUsecase {
   Future<Failure?> verifyPassword(
       {required VerifyPasswordFormDTO formDto}) async {
     // Make a POST request to the API.
-    Either<Failure, VendorDTO> res =
+    final Either<Failure, VendorDTO> res =
         await verifyPasswordRepository.postPassword(formDto: formDto);
 
     return res.fold((l) => l, (r) => null);

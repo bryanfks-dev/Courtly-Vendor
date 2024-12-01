@@ -15,10 +15,6 @@ class AuthUsecase {
     final String? token = await tokenRepository.getToken();
 
     // Check if the token is null
-    if (token == null) {
-      return false;
-    }
-
-    return true;
+    return token != null;
   }
 }

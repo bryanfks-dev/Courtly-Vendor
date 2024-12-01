@@ -33,12 +33,12 @@ class ChangePasswordRepository {
 
     try {
       // Call the API to change the password
-      http.Response res = await _apiRepository
+      final http.Response res = await _apiRepository
           .patch(endpoint: "vendors/me/password", body: formDto.toJson())
           .timeout(const Duration(seconds: 5));
 
       // Parse the response
-      ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
+      final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
           jsonDecode(res.body), VendorResponseDTO.fromJson);
 
       // Check if the response is successful

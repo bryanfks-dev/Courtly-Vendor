@@ -33,12 +33,12 @@ class VerifyPasswordRepository {
 
     try {
       // Call the API to verify the current password
-      http.Response res = await _apiRepository
+      final http.Response res = await _apiRepository
           .post(endpoint: "auth/vendor/verify-password", body: formDto.toJson())
           .timeout(const Duration(seconds: 2));
 
       // Parse the response
-      ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
+      final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
           jsonDecode(res.body), VendorResponseDTO.fromJson);
 
       // Check if the response is successful
