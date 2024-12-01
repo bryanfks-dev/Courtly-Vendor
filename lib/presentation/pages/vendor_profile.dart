@@ -1,6 +1,7 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/domain/entities/vendor.dart';
+import 'package:courtly_vendor/presentation/blocs/events/vendor_event.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/logout_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/vendor_state.dart';
@@ -128,8 +129,11 @@ class _VendorProfilePage extends State<VendorProfilePage> {
   void initState() {
     super.initState();
 
-    // Fetch the vendor data
-    context.read<VendorBloc>().fetchVendorData();
+    // Check if the vendor data is not loaded
+    if (context.read<VendorBloc>().state is! VendorLoadedState) {
+      // Fetch the vendor data
+      context.read<VendorBloc>().add(FetchVendorEvent());
+    }
   }
 
   @override
