@@ -5,6 +5,7 @@ import 'package:courtly_vendor/presentation/blocs/states/login_state.dart';
 import 'package:courtly_vendor/presentation/validators/login_form_validator.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
+import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
@@ -12,10 +13,7 @@ import 'package:heroicons/heroicons.dart';
 /// [LoginPage] is page for /login route.
 /// This page is used to login into existing account.
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key, required this.toAppScaffoldPage});
-
-  /// [toAppScaffoldPage] is the callback to navigate to the app scaffold page.
-  final VoidCallback toAppScaffoldPage;
+  LoginPage({super.key});
 
   /// [_loginFormValidator] is the login form validator.
   final LoginFormValidator _loginFormValidator = LoginFormValidator();
@@ -70,7 +68,8 @@ class LoginPage extends StatelessWidget {
 
           // Check if the login is successful.
           if (state is LoginSuccessState) {
-            toAppScaffoldPage();
+            // Navigate to the home page.
+            Navigator.pushReplacementNamed(context, Routes.home);
           }
         },
         builder: (BuildContext context, LoginState state) => Scaffold(
