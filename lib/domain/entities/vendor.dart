@@ -37,13 +37,16 @@ class Vendor {
   ///
   /// Returns a [Vendor] object.
   factory Vendor.fromDTO(VendorDTO dto) {
+    /// [timeFormatter] is a date formatter for time.
+    final DateFormat timeFormatter = DateFormat("hh:mm");
+
     return Vendor(
       id: dto.id,
       name: dto.name,
       address: dto.address,
       email: dto.email,
-      openTime: DateFormat("hh:mm").parse(dto.openTime),
-      closeTime: DateFormat("hh:mm").parse(dto.closeTime),
+      openTime: timeFormatter.parse(dto.openTime),
+      closeTime: timeFormatter.parse(dto.closeTime),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/dto/vendor_response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 /// [ChangePasswordRepository] is the repository for changing the password.
@@ -23,43 +24,44 @@ class ChangePasswordRepository {
   /// Parameters:
   ///   -  [formDto] is the form data.
   ///
-  /// Returns a [Failure] object.
+  /// Returns a [Future] of [Failure].
   Future<Failure?> patchPassword(
       {required ChangePasswordFormDTO formDto}) async {
     // Set the token from the storage
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
-    try {
-      // Call the API to change the password
-      final http.Response res = await _apiRepository
-          .patch(endpoint: "vendors/me/password", body: formDto.toJson())
-          .timeout(const Duration(seconds: 5));
+    // Call the API to change the password
+    final Either<Failure, http.Response> either = await _apiRepository.patch(
+        endpoint: "vendors/me/password",
+        body: formDto.toJson(),
+        timeoutInSec: 5);
 
-      // Parse the response
-      final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
-          json: jsonDecode(res.body), fromJsonT: VendorResponseDTO.fromJson);
-
-      // Check if the response is successful
-      if (responseDto.success) {
-        return null;
-      }
-
-      // Check for status codes
-      if (res.statusCode == HttpStatus.internalServerError) {
-        return ServerFailure(responseDto.message);
-      }
-
-      if (res.statusCode == HttpStatus.badRequest) {
-        return FormFailure(responseDto.message);
-      }
-
-      return UnknownFailure(responseDto.message);
-    } on SocketException catch (_) {
-      return const NetworkFailure();
-    } on TimeoutException catch (_) {
-      return const RequestFailure();
-    } on Exception catch (e) {
-      return UnknownFailure(e.toString());
+    // Check if the response is a failure
+    if (either.isLeft()) {
+      return either.fold((l) => l, (r) => null);
     }
+
+    // Get the response
+    final http.Response res = either.getOrElse(() => throw Exception());
+
+    // Parse the response
+    final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
+        json: jsonDecode(res.body), fromJsonT: VendorResponseDTO.fromJson);
+
+    // Check if the response is successful
+    if (responseDto.success) {
+      return null;
+    }
+
+    // Check for status codes
+    if (res.statusCode == HttpStatus.internalServerError) {
+      return ServerFailure(responseDto.message);
+    }
+
+    if (res.statusCode == HttpStatus.badRequest) {
+      return FormFailure(responseDto.message);
+    }
+
+    return UnknownFailure(responseDto.message);
   }
 }

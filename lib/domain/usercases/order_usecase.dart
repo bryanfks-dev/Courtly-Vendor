@@ -1,5 +1,5 @@
 import 'package:courtly_vendor/core/error/failure.dart';
-import 'package:courtly_vendor/data/dto/order_dto.dart';
+import 'package:courtly_vendor/data/dto/orders_response_dto.dart';
 import 'package:courtly_vendor/domain/entities/order.dart';
 import 'package:courtly_vendor/data/repository/api/order_repository.dart';
 import 'package:dartz/dartz.dart' as dartz;
@@ -16,7 +16,7 @@ class OrderUsecase {
   /// Returns a list of [Order] objects.
   Future<dartz.Either<Failure, List<Order>>> getOrders() async {
     // Fetch the orders from the repository.
-    final dartz.Either<Failure, List<OrderDTO>> orders =
+    final dartz.Either<Failure, OrdersResponseDTO> orders =
         await orderRepository.getOrders();
 
     // Check if there is failure
@@ -28,7 +28,7 @@ class OrderUsecase {
     // Convert the list of order dtos to a list of order entities.
     return dartz.Right(orders.fold(
       (l) => <Order>[],
-      (r) => r.map((dto) => Order.fromDTO(dto)).toList(),
+      (r) => r.orders.map((dto) => Order.fromDTO(dto)).toList(),
     ));
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/login_form_dto.dart';
+import 'package:courtly_vendor/data/dto/login_response_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/login_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
@@ -25,13 +26,13 @@ class LoginUsecase {
   /// Returns a [ResponseDTO] object.
   Future<Failure?> login(LoginFormDTO formDto) async {
     // Make a POST request to the API.
-    final Either<Failure, String> res =
+    final Either<Failure, LoginResponseDTO> res =
         await loginRepository.postLogin(formDto: formDto);
 
     // Check if the request is not success
     return res.fold((l) => l, (r) async {
       // Set the token to the storage.
-      await tokenRepository.setToken(r);
+      await tokenRepository.setToken(r.token);
 
       return null;
     });
