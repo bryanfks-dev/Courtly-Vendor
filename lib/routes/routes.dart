@@ -9,4 +9,7 @@ class Routes {
 
   /// [detailCourts] is the detail courts route.
   static String detailCourts = "/detail-courts";
+
+  /// [addNewCourt] is the add new court route.
+  static String addNewCourt = "/add-new-court";
 }

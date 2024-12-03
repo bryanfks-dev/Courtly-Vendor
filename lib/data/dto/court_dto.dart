@@ -12,11 +12,15 @@ class CourtDTO {
   /// [price] is the price of the court.
   final double price;
 
+  /// [imageUrl] is the URL of the image of the court.
+  final String imageUrl;
+
   CourtDTO({
     required this.id,
     required this.name,
     required this.type,
     required this.price,
+    required this.imageUrl,
   });
 
   /// [fromJson] is a factory method to create a [CourtDTO] from a map.
@@ -31,6 +35,7 @@ class CourtDTO {
       name: json['name'],
       type: json['type'],
       price: json['price'],
+      imageUrl: json['imageUrl'],
     );
   }
 }

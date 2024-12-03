@@ -21,6 +21,7 @@ import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/order_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
+import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
 import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
@@ -94,6 +95,7 @@ class _MyApp extends State<MyApp> {
           Routes.myCourts: (context) => MyCourtsPage(),
           Routes.detailCourts: (context) => const MyCourtDetail(),
           Routes.changePassword: (context) => const ChangePasswordPage(),
+          Routes.addNewCourt: (context) => const AddNewCourtPage(),
         },
         home: BlocBuilder<AuthBloc, AuthState>(
             builder: (BuildContext context, AuthState state) {

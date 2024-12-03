@@ -5,15 +5,17 @@ class OrdersResponseDTO {
   /// [orders] is a list of orders.
   final List<OrderDTO> orders;
 
-  /// [OrdersResponseDTO] is a constructor for [OrdersResponseDTO].
-  const OrdersResponseDTO(this.orders);
+  const OrdersResponseDTO({required this.orders});
 
   /// [fromJson] is a factory method to create a [OrdersResponseDTO] from a map.
+  /// 
+  /// Parameters:
+  ///   - [json] is a map that contains the orders data.
   ///
   /// Returns a [OrdersResponseDTO] object.
   factory OrdersResponseDTO.fromJson(Map<String, dynamic> json) {
     return OrdersResponseDTO(
-      (json['orders'] as List)
+      orders: (json['orders'] as List)
           .map((order) => OrderDTO.fromJson(order))
           .toList(),
     );
