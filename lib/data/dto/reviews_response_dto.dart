@@ -6,8 +6,8 @@ class ReviewsResponseDTO {
   /// [totalRating] is the total rating of the reviews.
   final double totalRating;
 
-  /// [reviewTotal] is the total number of reviews.
-  final int reviewTotal;
+  /// [reviewsTotal] is the total number of reviews.
+  final int reviewsTotal;
 
   /// [reviewStars] is the review stars.
   final ReviewStarsDTO reviewStars;
@@ -17,7 +17,7 @@ class ReviewsResponseDTO {
 
   ReviewsResponseDTO({
     required this.totalRating,
-    required this.reviewTotal,
+    required this.reviewsTotal,
     required this.reviewStars,
     required this.reviews,
   });
@@ -30,9 +30,9 @@ class ReviewsResponseDTO {
   /// Returns a [ReviewsResponseDTO] instance.
   factory ReviewsResponseDTO.fromJson(Map<String, dynamic> json) {
     return ReviewsResponseDTO(
-      totalRating: json['total_rating'],
-      reviewTotal: json['review_total'],
-      reviewStars: ReviewStarsDTO.fromJson(json['review_stars']),
+      totalRating: json['total_rating'] + .0,
+      reviewsTotal: json['reviews_total'],
+      reviewStars: ReviewStarsDTO.fromJson(json['stars']),
       reviews: (json['reviews'] as List)
           .map((review) => ReviewDTO.fromJson(review))
           .toList(),

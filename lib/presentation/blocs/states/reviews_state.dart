@@ -1,4 +1,4 @@
-import 'package:courtly_vendor/domain/entities/review.dart';
+import 'package:courtly_vendor/domain/entities/reviews_stats.dart';
 
 /// [ReviewsState] is the abstract class that will be extended by the different states of the reviews bloc.
 abstract class ReviewsState {}
@@ -14,10 +14,10 @@ class ReviewsLoadingState extends ReviewsState {}
 /// [ReviewsLoadedState] is the state that represents the loaded state of the reviews bloc.
 /// This state is used when the reviews bloc has successfully fetched data from the server.
 class ReviewsLoadedState extends ReviewsState {
-  /// [reviews] is a list of reviews.
-  final List<Review> reviews;
+  /// [reviewsStats] is the reviews statistics.
+  final ReviewsStats reviewsStats;
 
-  ReviewsLoadedState({required this.reviews});
+  ReviewsLoadedState({required this.reviewsStats});
 }
 
 /// [ReviewsErrorState] is the state that represents the error state of the reviews bloc.

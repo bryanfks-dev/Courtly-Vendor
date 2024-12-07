@@ -20,13 +20,16 @@ class ReviewRepository {
   /// [getReviews] is a method that fetches reviews from the API.
   ///
   /// Returns a [Future] of [Either] a [Failure] or [ReviewsResponseDTO]
-  Future<Either<Failure, ReviewsResponseDTO>> getReviews() async {
+  Future<Either<Failure, ReviewsResponseDTO>> getReviews({int? rating}) async {
     // Set the token from storage
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
+    // Set the query param
+    final String queryParam = rating != null ? "?type=$rating" : "";
+
     // Make a GET request to the API.
     final Either<Failure, http.Response> either = await _apiRepository.get(
-        endpoint: 'vendors/me/reviews', timeoutInSec: 2);
+        endpoint: 'vendors/me/reviews$queryParam', timeoutInSec: 2);
 
     // Check for failure
     if (either.isLeft()) {
