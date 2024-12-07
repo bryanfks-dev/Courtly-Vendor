@@ -1,6 +1,6 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
-import 'package:courtly_vendor/presentation/blocs/order_bloc.dart';
-import 'package:courtly_vendor/presentation/blocs/states/order_state.dart';
+import 'package:courtly_vendor/presentation/blocs/orders_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/orders_state.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/orders/order_card.dart';
 import 'package:flutter/material.dart';
@@ -24,21 +24,21 @@ class _OrdersPage extends State<OrdersPage> {
     super.initState();
 
     // Fetch the orders.
-    context.read<OrderBloc>().getOrders();
+    context.read<OrdersBloc>().getOrders();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OrderBloc, OrderState>(
-        listener: (BuildContext context, OrderState state) {
+    return BlocConsumer<OrdersBloc, OrdersState>(
+        listener: (BuildContext context, OrdersState state) {
       // Show error message if there is an error.
-      if (state is OrderErrorState) {
+      if (state is OrdersErrorState) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(state.errorMessage)));
       }
-    }, builder: (BuildContext context, OrderState state) {
+    }, builder: (BuildContext context, OrdersState state) {
       // Show loading screen if the state is not OrderLoadedState.
-      if (state is! OrderLoadedState) {
+      if (state is! OrdersLoadedState) {
         return const LoadingScreen();
       }
 

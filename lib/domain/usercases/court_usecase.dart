@@ -1,7 +1,9 @@
 import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/courts_response_dto.dart';
 import 'package:courtly_vendor/data/dto/add_new_court_form_dto.dart';
+import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/court_repository.dart';
+import 'package:courtly_vendor/domain/entities/courts_stats.dart';
 import 'package:dartz/dartz.dart';
 
 /// [CourtUsecase] is a class that is used to manage the usecase of the court.
@@ -26,5 +28,15 @@ class CourtUsecase {
 
     // Check if the request is not success
     return res.fold((l) => l, (r) => null);
+  }
+
+  /// [getCourtsStats] is a method used to get the courts stats.
+  /// 
+  /// Returns a [Future] of [Either] a [Failure] or [CourtsStats] entity.
+  Future<Either<Failure, CourtsStats>> getCourtsStats() async {
+    final Either<Failure, CourtsStatsResponseDTO> res =
+        await courtRepository.getCourtsStats();
+
+    return res.fold((l) => Left(l), (r) => Right(CourtsStats.fromDTO(r)));
   }
 }

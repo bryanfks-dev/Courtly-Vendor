@@ -46,7 +46,7 @@ class _AppScaffold extends State<AppScaffold> {
   @override
   void initState() {
     super.initState();
-    
+
     pages = [
       PageProps(
           appBar: const DefaultAppBar(),
@@ -60,7 +60,7 @@ class _AppScaffold extends State<AppScaffold> {
           backgroundColor: ColorSchemes.primaryBackground),
       PageProps(
           appBar: const CenteredAppBar(title: "Orders"),
-          body: OrdersPage(),
+          body: const OrdersPage(),
           icon: const HeroIcon(HeroIcons.clipboardDocumentList),
           selectedIcon: const HeroIcon(HeroIcons.clipboardDocumentList,
               style: HeroIconStyle.solid),
@@ -68,7 +68,7 @@ class _AppScaffold extends State<AppScaffold> {
           backgroundColor: ColorSchemes.secondaryBackground),
       PageProps(
           appBar: const CenteredAppBar(title: "Reviews"),
-          body: ReviewsPage(),
+          body: const ReviewsPage(),
           icon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
           selectedIcon: const HeroIcon(HeroIcons.chatBubbleLeftEllipsis,
               style: HeroIconStyle.solid),

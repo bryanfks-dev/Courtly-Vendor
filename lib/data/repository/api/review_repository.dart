@@ -1,33 +1,32 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
-import 'package:courtly_vendor/data/dto/vendor_response_dto.dart';
+import 'package:courtly_vendor/data/dto/reviews_response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
-/// [VendorRepository] is a class to handle vendor requests.
-class VendorRepository {
-  /// [_tokenRepository] is the token repository.
-  final TokenRepository _tokenRepository = TokenRepository();
-
-  /// [_apiRepository] is the API repository.
+/// [ReviewRepository] is a class that contains the business logic for the Review entity.
+class ReviewRepository {
+  /// [_apiRepository] is an instance of [ApiRepository].
   final ApiRepository _apiRepository = ApiRepository();
 
-  /// [getVendor] is a function to make a POST request to the API.
+  /// [_tokenRepository] is an instance of [TokenRepository].
+  final TokenRepository _tokenRepository = TokenRepository();
+
+  /// [getReviews] is a method that fetches reviews from the API.
   ///
-  /// Returns a [Future] of [Either] a [Failure] or [VendorResponseDTO].
-  Future<Either<Failure, VendorResponseDTO>> getVendor() async {
-    // Set the token from the storage
+  /// Returns a [Future] of [Either] a [Failure] or [ReviewsResponseDTO]
+  Future<Either<Failure, ReviewsResponseDTO>> getReviews() async {
+    // Set the token from storage
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
     // Make a GET request to the API.
-    final Either<Failure, http.Response> either = await _apiRepository
-        .get(endpoint: 'vendors/me', timeoutInSec: 2);
+    final Either<Failure, http.Response> either = await _apiRepository.get(
+        endpoint: 'vendors/me/reviews', timeoutInSec: 2);
 
     // Check for failure
     if (either.isLeft()) {
@@ -39,8 +38,8 @@ class VendorRepository {
     final http.Response res = either.getOrElse(() => throw 'No response');
 
     // Parse the response
-    final ResponseDTO<VendorResponseDTO> responseDto = ResponseDTO.fromJson(
-        json: jsonDecode(res.body), fromJsonT: VendorResponseDTO.fromJson);
+    final ResponseDTO<ReviewsResponseDTO> responseDto = ResponseDTO.fromJson(
+        json: jsonDecode(res.body), fromJsonT: ReviewsResponseDTO.fromJson);
 
     // Check if the response is successful
     if (responseDto.success) {

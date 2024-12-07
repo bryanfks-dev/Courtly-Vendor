@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:courtly_vendor/core/error/failure.dart';
 import 'package:courtly_vendor/data/dto/courts_response_dto.dart';
 import 'package:courtly_vendor/data/dto/add_new_court_form_dto.dart';
+import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
@@ -47,6 +48,35 @@ class CourtRepository {
     }
 
     // Check for status codes
+    if (res.statusCode == HttpStatus.internalServerError) {
+      return Left(ServerFailure(responseDto.message));
+    }
+
+    return Left(UnknownFailure(responseDto.message));
+  }
+
+  Future<Either<Failure, CourtsStatsResponseDTO>> getCourtsStats() async {
+    await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
+
+    final Either<Failure, http.Response> either = await _apiRepository.get(
+        endpoint: "vendors/me/courts/stats", timeoutInSec: 2);
+
+    if (either.isLeft()) {
+      return Left(
+          either.fold((l) => l, (r) => const UnknownFailure('Unknown error')));
+    }
+
+    final http.Response res = either.getOrElse(() => throw 'No response');
+
+    final ResponseDTO<CourtsStatsResponseDTO> responseDto =
+        ResponseDTO.fromJson(
+            json: jsonDecode(res.body),
+            fromJsonT: CourtsStatsResponseDTO.fromJson);
+
+    if (responseDto.success) {
+      return Right(responseDto.data!);
+    }
+
     if (res.statusCode == HttpStatus.internalServerError) {
       return Left(ServerFailure(responseDto.message));
     }

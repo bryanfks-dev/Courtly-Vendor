@@ -6,6 +6,7 @@ enum Sports {
   football("Football"),
   badminton("Badminton"),
   basketball("Basketball"),
+  volleyball("Volleyball"),
   tennis("Tennis");
 
   /// [label] is the name of the sport and used in the UI to

@@ -1,16 +1,20 @@
 import 'package:courtly_vendor/core/config/app_themes.dart';
 import 'package:courtly_vendor/data/repository/api/change_password_repository.dart';
+import 'package:courtly_vendor/data/repository/api/court_repository.dart';
 import 'package:courtly_vendor/data/repository/api/login_repository.dart';
 import 'package:courtly_vendor/data/repository/api/logout_repository.dart';
 import 'package:courtly_vendor/data/repository/api/order_repository.dart';
+import 'package:courtly_vendor/data/repository/api/review_repository.dart';
 import 'package:courtly_vendor/data/repository/api/vendor_repository.dart';
 import 'package:courtly_vendor/data/repository/api/verify_password_repository.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:courtly_vendor/domain/usercases/auth_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/change_password_usecase.dart';
+import 'package:courtly_vendor/domain/usercases/court_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/logout_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/order_usecase.dart';
+import 'package:courtly_vendor/domain/usercases/review_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/vendor_usecase.dart';
 import 'package:courtly_vendor/domain/usercases/verify_password_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
@@ -18,7 +22,9 @@ import 'package:courtly_vendor/presentation/blocs/change_password_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
-import 'package:courtly_vendor/presentation/blocs/order_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/orders_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
 import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
@@ -78,9 +84,17 @@ class _MyApp extends State<MyApp> {
                 changePasswordUsecase: ChangePasswordUsecase(
                     changePasswordRepository: ChangePasswordRepository()))),
         BlocProvider(
-            create: (BuildContext context) => OrderBloc(
+            create: (BuildContext context) => OrdersBloc(
                 orderUsecase:
                     OrderUsecase(orderRepository: OrderRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => ReviewsBloc(
+                reviewUsecase:
+                    ReviewUsecase(reviewRepository: ReviewRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => MyCourtsBloc(
+                courtUsecase:
+                    CourtUsecase(courtRepository: CourtRepository()))),
         BlocProvider(
             create: (BuildContext context) => LogoutBloc(
                 logoutUsecase: LogoutUsecase(

@@ -8,9 +8,14 @@ import 'package:heroicons/heroicons.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 /// [ReviewsPage] is a page to show user's reviews.
-class ReviewsPage extends StatelessWidget {
-  ReviewsPage({super.key});
+class ReviewsPage extends StatefulWidget {
+  const ReviewsPage({super.key});
 
+  @override
+  State<ReviewsPage> createState() => _ReviewsPage();
+}
+
+class _ReviewsPage extends State<ReviewsPage> {
   /// [_selectedChipNotifier] is the selected chip via filter chips.
   final ValueNotifier<int> _selectedChipNotifier = ValueNotifier(0);
 
