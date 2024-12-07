@@ -1,5 +1,6 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/domain/entities/review.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/reviews_state.dart';
 import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
@@ -227,12 +228,16 @@ class _ReviewsPage extends State<ReviewsPage> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
+                          /// [review] is the review object.
+                          final Review review =
+                              state.reviewsStats.reviews[index];
+
                           return ReviewCard(
-                              userProfile: "",
-                              userName: "EL Gasing",
-                              reviewDate: DateTime.now(),
-                              rate: 3,
-                              review: "This is a review from user.");
+                              userProfile: review.user.profilePictureUrl,
+                              userName: review.user.username,
+                              reviewDate: review.date,
+                              rate: review.rating,
+                              review: review.review);
                         },
                         separatorBuilder: (BuildContext context, int index) =>
                             const SizedBox(height: 10),
