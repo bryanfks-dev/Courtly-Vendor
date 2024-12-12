@@ -1,8 +1,8 @@
 import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/dto/change_password_form_dto.dart';
 import 'package:courtly_vendor/data/dto/verify_password_form_dto.dart';
-import 'package:courtly_vendor/domain/usercases/change_password_usecase.dart';
-import 'package:courtly_vendor/domain/usercases/verify_password_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/change_password_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/verify_password_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/change_password_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

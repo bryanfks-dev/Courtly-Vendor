@@ -1,6 +1,6 @@
 import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/domain/entities/vendor.dart';
-import 'package:courtly_vendor/domain/usercases/vendor_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/vendor_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/events/vendor_event.dart';
 import 'package:courtly_vendor/presentation/blocs/states/vendor_state.dart';
 import 'package:dartz/dartz.dart';

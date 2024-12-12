@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/dto/add_new_court_form_dto.dart';
-import 'package:courtly_vendor/domain/usercases/court_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/court_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/add_new_court_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

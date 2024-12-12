@@ -1,5 +1,5 @@
 import 'package:courtly_vendor/core/errors/failure.dart';
-import 'package:courtly_vendor/domain/usercases/order_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/order_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/orders_state.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:courtly_vendor/domain/entities/order.dart';

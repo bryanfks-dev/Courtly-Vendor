@@ -1,6 +1,6 @@
 import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/domain/entities/reviews_stats.dart';
-import 'package:courtly_vendor/domain/usercases/review_usecase.dart';
+import 'package:courtly_vendor/domain/usecases/review_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/reviews_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
