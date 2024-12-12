@@ -1,4 +1,4 @@
-import 'package:courtly_vendor/core/error/failure.dart';
+import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/dto/orders_response_dto.dart';
 import 'package:courtly_vendor/data/dto/orders_stats_response_dto.dart';
 import 'package:courtly_vendor/domain/entities/order.dart';

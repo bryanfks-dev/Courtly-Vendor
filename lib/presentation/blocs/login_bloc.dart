@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:courtly_vendor/core/error/failure.dart';
+import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/dto/login_form_dto.dart';
 import 'package:courtly_vendor/domain/usercases/login_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/states/login_state.dart';

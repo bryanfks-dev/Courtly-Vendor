@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:courtly_vendor/core/error/failure.dart';
+import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;

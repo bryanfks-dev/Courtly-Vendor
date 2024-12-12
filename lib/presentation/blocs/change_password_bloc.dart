@@ -1,4 +1,4 @@
-import 'package:courtly_vendor/core/error/failure.dart';
+import 'package:courtly_vendor/core/errors/failure.dart';
 import 'package:courtly_vendor/data/dto/change_password_form_dto.dart';
 import 'package:courtly_vendor/data/dto/verify_password_form_dto.dart';
 import 'package:courtly_vendor/domain/usercases/change_password_usecase.dart';
