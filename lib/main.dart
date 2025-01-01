@@ -111,7 +111,7 @@ class _MyApp extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         theme: AppThemes.light,
         routes: {
-          Routes.myCourts: (context) => MyCourtsPage(),
+          Routes.myCourts: (context) => const MyCourtsPage(),
           Routes.detailCourts: (context) => const MyCourtDetail(),
           Routes.changePassword: (context) => const ChangePasswordPage(),
           Routes.addNewCourt: (context) => const AddNewCourtPage(),
