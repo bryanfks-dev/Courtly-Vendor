@@ -13,12 +13,12 @@ class OrdersBloc extends Cubit<OrdersState> {
   OrdersBloc({required this.orderUsecase}) : super(OrdersInitialState());
 
   /// [getOrders] is a method that fetches the orders from the repository.
-  Future<void> getOrders() async {
+  Future<void> getOrders({String? courtType}) async {
     emit(OrdersLoadingState());
 
     // Fetch the orders from the repository.
     final dartz.Either<Failure, List<Order>> result =
-        await orderUsecase.getOrders();
+        await orderUsecase.getOrders(courtType: courtType);
 
     result.fold(
       (failure) => emit(OrdersErrorState(errorMessage: failure.errorMessage)),

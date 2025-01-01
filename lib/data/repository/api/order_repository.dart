@@ -22,13 +22,23 @@ class OrderRepository {
   /// [getOrders] is a method that fetches the list of orders.
   ///
   /// Returns a [Future] of [Either] a [Failure] or [OrdersResponseDTO].
-  Future<Either<Failure, OrdersResponseDTO>> getOrders() async {
+  Future<Either<Failure, OrdersResponseDTO>> getOrders(
+      {String? courtType}) async {
     // Set the token from storage.
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
+    // Set the query parameters.
+    final Map<String, String> queryParameters = {};
+
+    if (courtType != null && courtType.isNotEmpty) {
+      queryParameters['type'] = courtType;
+    }
+
     // Get the orders from the API.
     final Either<Failure, http.Response> either = await _apiRepository.get(
-        endpoint: 'vendors/me/orders', timeoutInSec: 10);
+        endpoint: 'vendors/me/orders',
+        queryParam: queryParameters,
+        timeoutInSec: 10);
 
     // Check for failure.
     if (either.isLeft()) {

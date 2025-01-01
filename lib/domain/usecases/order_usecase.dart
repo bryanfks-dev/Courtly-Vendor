@@ -16,10 +16,11 @@ class OrderUsecase {
   /// [getOrders] is a method that returns a list of orders.
   ///
   /// Returns a list of [Order] objects.
-  Future<dartz.Either<Failure, List<Order>>> getOrders() async {
+  Future<dartz.Either<Failure, List<Order>>> getOrders(
+      {String? courtType}) async {
     // Fetch the orders from the repository.
     final dartz.Either<Failure, OrdersResponseDTO> orders =
-        await orderRepository.getOrders();
+        await orderRepository.getOrders(courtType: courtType);
 
     // Convert the list of order dtos to a list of order entities.
     return orders.fold(

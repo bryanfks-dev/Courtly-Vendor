@@ -202,7 +202,7 @@ class _ReviewsPage extends State<ReviewsPage> {
                     child: FilterChips(
                       items: _chipLabelItems,
                       selectedItem: _selectedChipNotifier,
-                      onTap: () {
+                      onSelected: () {
                         context.read<ReviewsBloc>().getReviews(
                             rating: _selectedChipNotifier.value == 0
                                 ? null

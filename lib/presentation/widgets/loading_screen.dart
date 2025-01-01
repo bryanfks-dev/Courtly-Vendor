@@ -10,29 +10,16 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.black.withOpacity(0.5),
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: ColorSchemes.primaryBackground,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  label ?? "Loading...",
-                  style: const TextStyle(fontSize: 14),
-                )
-              ],
-            ),
-          ),
-        ));
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 20),
+          Text(label ?? 'Loading...',
+              style: TextStyle(fontSize: 14, color: ColorSchemes.text)),
+        ],
+      ),
+    );
   }
 }

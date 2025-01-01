@@ -7,7 +7,7 @@ class FilterChips extends StatelessWidget {
       {super.key,
       required this.items,
       required this.selectedItem,
-      required this.onTap});
+      required this.onSelected});
 
   /// [items] is the list of items that the user can choose from.
   final List<Widget> items;
@@ -15,9 +15,8 @@ class FilterChips extends StatelessWidget {
   /// [selectedItem] is the selected item.
   final ValueNotifier<int> selectedItem;
 
-  /// [onTap] is the callback function that is called when the user
-  /// taps on an item.
-  final VoidCallback onTap;
+  /// [onSelected] is the callback function when an item is selected.
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class FilterChips extends StatelessWidget {
                         // Set the selected chip
                         selectedItem.value = i;
 
-                        onTap();
+                        onSelected();
                       },
                     ),
                   )
