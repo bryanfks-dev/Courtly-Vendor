@@ -13,6 +13,8 @@ class HomeBloc extends Cubit<HomeState> {
   HomeBloc({required this.orderUsecase}) : super(HomeInitialState());
 
   /// [getOrdersStats] is a method that fetches the statistics of orders.
+  /// 
+  /// Returns a [Future] of [void].
   Future<void> getOrdersStats() async {
     emit(HomeLoadingState());
 

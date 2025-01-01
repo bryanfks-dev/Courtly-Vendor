@@ -20,6 +20,7 @@ import 'package:courtly_vendor/domain/usecases/verify_password_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/change_password_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
+import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
@@ -73,6 +74,10 @@ class _MyApp extends State<MyApp> {
                 loginUsecase: LoginUsecase(
                     tokenRepository: TokenRepository(),
                     loginRepository: LoginRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => HomeBloc(
+                orderUsecase:
+                    OrderUsecase(orderRepository: OrderRepository()))),
         BlocProvider(
             create: (BuildContext context) => VendorBloc(
                 vendorUsecase:

@@ -102,9 +102,9 @@ class OrderRepository {
 
     // Check for status codes
     if (res.statusCode == HttpStatus.internalServerError) {
-      return Left(ServerFailure(responseDto.message.toString()));
+      return Left(ServerFailure(responseDto.message));
     }
 
-    return Left(UnknownFailure(responseDto.message.toString()));
+    return Left(UnknownFailure(responseDto.message));
   }
 }

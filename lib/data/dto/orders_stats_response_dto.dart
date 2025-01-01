@@ -29,7 +29,9 @@ class OrdersStatsResponseDTO {
     return OrdersStatsResponseDTO(
       totalOrders: json['total_orders'],
       totalOrdersToday: json['total_orders_today'],
-      recentOrders: json['recent_orders'],
+      recentOrders: (json['recent_orders'] as List)
+          .map((x) => OrderDTO.fromJson(x))
+          .toList(),
     );
   }
 }

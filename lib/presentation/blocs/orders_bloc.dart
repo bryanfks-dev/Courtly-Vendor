@@ -13,6 +13,8 @@ class OrdersBloc extends Cubit<OrdersState> {
   OrdersBloc({required this.orderUsecase}) : super(OrdersInitialState());
 
   /// [getOrders] is a method that fetches the orders from the repository.
+  /// 
+  /// Returns [Future] of [void]
   Future<void> getOrders({String? courtType}) async {
     emit(OrdersLoadingState());
 

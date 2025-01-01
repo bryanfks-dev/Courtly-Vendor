@@ -20,6 +20,11 @@ class ChangePasswordBloc extends Cubit<ChangePasswordState> {
       : super(ChangePasswordInitialState());
 
   /// [verifyCurrentPassword] is a method used to verify the current password
+  /// 
+  /// Parameters:
+  ///   - [currentPassword] is the user's current password
+  /// 
+  /// Returns [Future] of [void]
   Future<void> verifyCurrentPassword({required String currentPassword}) async {
     emit(ChangePasswordVerfyingState());
 
