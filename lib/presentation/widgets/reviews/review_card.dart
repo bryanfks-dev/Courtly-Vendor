@@ -1,7 +1,9 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/domain/entities/review.dart';
 import 'package:courtly_vendor/presentation/widgets/reviews/star_row.dart';
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:intl/intl.dart';
 
 /// [ReviewCard] is a card to show the review of the user.
@@ -10,27 +12,11 @@ import 'package:intl/intl.dart';
 class ReviewCard extends StatelessWidget {
   const ReviewCard({
     super.key,
-    required this.userName,
-    required this.userProfile,
-    required this.reviewDate,
-    required this.rate,
     required this.review,
   });
 
-  /// [userName] is the name of the user.
-  final String userName;
-
-  /// [userProfile] is the profile of the user.
-  final String userProfile;
-
-  /// [reviewDate] is the date of the review.
-  final DateTime reviewDate;
-
-  /// [rate] is the rate of the review.
-  final int rate;
-
-  /// [review] is the review of the user.
-  final String review;
+  /// [review] is the review object.
+  final Review review;
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +32,30 @@ class ReviewCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: ColorSchemes.subtle,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                          color: ColorSchemes.subtle,
+                          shape: BoxShape.circle,
+                          image: review.user.profilePictureUrl.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                      review.user.profilePictureUrl),
+                                  fit: BoxFit.cover)
+                              : null),
+                      child: review.user.profilePictureUrl.isEmpty
+                          ? HeroIcon(
+                              HeroIcons.userCircle,
+                              color: ColorSchemes.highlight,
+                              style: HeroIconStyle.solid,
+                              size: 64,
+                            )
+                          : null),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    userName,
+                    review.user.username,
                     style: TextStyle(
                         color: ColorSchemes.text,
                         fontSize: 14,
@@ -66,7 +64,7 @@ class ReviewCard extends StatelessWidget {
                 ],
               ),
               Text(
-                DateFormat("MMM, dd yyyy", "en_US").format(reviewDate),
+                DateFormat("MMM, dd yyyy").format(review.date),
                 style: TextStyle(
                   color: ColorSchemes.highlight,
                   fontSize: 12,
@@ -75,13 +73,13 @@ class ReviewCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          Text("Football Court",
+          Text("${review.courtType} Court",
               style: TextStyle(color: ColorSchemes.highlight, fontSize: 12)),
           const SizedBox(height: 5),
-          StarRow(rate: rate),
+          StarRow(rate: review.rating),
           const SizedBox(height: 5),
           Text(
-            review,
+            review.review,
             textAlign: TextAlign.justify,
             style: TextStyle(
               color: ColorSchemes.text,

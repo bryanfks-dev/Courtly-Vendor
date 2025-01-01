@@ -1,3 +1,4 @@
+import 'package:courtly_vendor/core/config/api_server_config.dart';
 import 'package:courtly_vendor/data/dto/user_dto.dart';
 
 /// [User] is an entity class that represents a user.
@@ -25,9 +26,10 @@ class User {
   /// Returns a [User] object.
   factory User.fromDTO(UserDTO dto) {
     return User(
-      id: dto.id,
-      username: dto.username,
-      profilePictureUrl: dto.profilePictureUrl,
-    );
+        id: dto.id,
+        username: dto.username,
+        profilePictureUrl: dto.profilePictureUrl.isEmpty
+            ? ""
+            : "${ApiServerConfig.baseUrl}/${dto.profilePictureUrl}");
   }
 }

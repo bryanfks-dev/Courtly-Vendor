@@ -1,6 +1,5 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
-import 'package:courtly_vendor/domain/entities/review.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/reviews_state.dart';
 import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
@@ -203,7 +202,12 @@ class _ReviewsPage extends State<ReviewsPage> {
                     child: FilterChips(
                       items: _chipLabelItems,
                       selectedItem: _selectedChipNotifier,
-                      onTap: () {},
+                      onTap: () {
+                        context.read<ReviewsBloc>().getReviews(
+                            rating: _selectedChipNotifier.value == 0
+                                ? null
+                                : _selectedChipNotifier.value);
+                      },
                     ),
                   ),
                 ),
@@ -228,16 +232,9 @@ class _ReviewsPage extends State<ReviewsPage> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          /// [review] is the review object.
-                          final Review review =
-                              state.reviewsStats.reviews[index];
-
                           return ReviewCard(
-                              userProfile: review.user.profilePictureUrl,
-                              userName: review.user.username,
-                              reviewDate: review.date,
-                              rate: review.rating,
-                              review: review.review);
+                            review: state.reviewsStats.reviews[index],
+                          );
                         },
                         separatorBuilder: (BuildContext context, int index) =>
                             const SizedBox(height: 10),

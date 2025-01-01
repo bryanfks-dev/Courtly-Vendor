@@ -24,12 +24,19 @@ class ReviewRepository {
     // Set the token from storage
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
-    // Set the query param
-    final String queryParam = rating != null ? "?type=$rating" : "";
+    // Set the query params
+    final Map<String, dynamic> queryParams = {};
+
+    // Check if rating is not null
+    if (rating != null && rating != 0) {
+      queryParams['rating'] = rating.toString();
+    }
 
     // Make a GET request to the API.
     final Either<Failure, http.Response> either = await _apiRepository.get(
-        endpoint: 'vendors/me/reviews$queryParam', timeoutInSec: 2);
+        endpoint: 'vendors/me/reviews',
+        queryParam: queryParams,
+        timeoutInSec: 2);
 
     // Check for failure
     if (either.isLeft()) {
