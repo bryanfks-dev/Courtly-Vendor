@@ -48,7 +48,7 @@ class ApiRepository {
   Future<Either<Failure, http.Response>> get(
       {required String endpoint,
       required int timeoutInSec,
-      Map<String, dynamic>? queryParam}) async {
+      Map<String, String>? queryParam}) async {
     /// [uri] is the URI for the API request.
     late Uri uri;
 

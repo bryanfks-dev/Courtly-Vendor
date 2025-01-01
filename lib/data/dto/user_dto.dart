@@ -1,8 +1,13 @@
 /// [UserDTO] is a data transfer object class that holds the user data.
 class UserDTO {
+  /// [id] is the ID of the user.
   final int id;
+
+  /// [username] is the username of the user.
   final String username;
-  final String profilePictureUrl;
+
+  /// [profilePictureUrl] is the URL of the user's profile picture.
+  final String? profilePictureUrl;
 
   UserDTO({
     required this.id,

@@ -28,8 +28,8 @@ class User {
     return User(
         id: dto.id,
         username: dto.username,
-        profilePictureUrl: dto.profilePictureUrl.isEmpty
-            ? ""
-            : "${ApiServerConfig.baseUrl}/${dto.profilePictureUrl}");
+        profilePictureUrl: (dto.profilePictureUrl != null)
+            ? "${ApiServerConfig.baseUrl}/${dto.profilePictureUrl}"
+            : "");
   }
 }

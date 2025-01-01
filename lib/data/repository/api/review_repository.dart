@@ -25,7 +25,7 @@ class ReviewRepository {
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
     // Set the query params
-    final Map<String, dynamic> queryParams = {};
+    final Map<String, String> queryParams = {};
 
     // Check if rating is not null
     if (rating != null && rating != 0) {
