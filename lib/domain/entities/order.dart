@@ -1,5 +1,4 @@
 import 'package:courtly_vendor/data/dto/order_dto.dart';
-import 'package:courtly_vendor/domain/entities/court.dart';
 import 'package:courtly_vendor/domain/entities/user.dart';
 import 'package:intl/intl.dart';
 
@@ -11,29 +10,25 @@ class Order {
   /// [user] is the user who ordered.
   final User user;
 
-  /// [court] is the court that was ordered.
-  final Court court;
+  /// [courtType] is the type of the court.
+  final String courtType;
 
   /// [date] is the date of the booking.
   final DateTime date;
 
-  /// [bookStartTime] is the start time of the booking.
-  final DateTime bookStartTime;
-
-  /// [bookEndTime] is the end time of the booking.
-  final DateTime bookEndTime;
-
   /// [price] is the price of the booking.
   final double price;
+
+  /// [appFee] is the application fee of the booking.
+  final double appFee;
 
   Order({
     required this.id,
     required this.user,
-    required this.court,
+    required this.courtType,
     required this.date,
-    required this.bookStartTime,
-    required this.bookEndTime,
     required this.price,
+    required this.appFee,
   });
 
   /// [fromDTO] is a factory method to create an [Order] from a dto.
@@ -46,17 +41,13 @@ class Order {
     /// [dateFormatter] is a date formatter object.
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 
-    /// [timeFormatter] is a time formatter object.
-    final DateFormat timeFormatter = DateFormat('HH:mm');
-
     return Order(
       id: dto.id,
       user: User.fromDTO(dto.user),
-      court: Court.fromDTO(dto.court),
+      courtType: dto.courtType,
       date: dateFormatter.parse(dto.date),
-      bookStartTime: timeFormatter.parse(dto.bookStartTime),
-      bookEndTime: timeFormatter.parse(dto.bookEndTime),
       price: dto.price,
+      appFee: dto.appFee,
     );
   }
 }

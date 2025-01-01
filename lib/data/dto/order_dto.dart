@@ -1,4 +1,3 @@
-import 'package:courtly_vendor/data/dto/court_dto.dart';
 import 'package:courtly_vendor/data/dto/user_dto.dart';
 
 /// [OrderDTO] is a data transfer object that represents the order data.
@@ -9,29 +8,25 @@ class OrderDTO {
   /// [user] is the user who ordered.
   final UserDTO user;
 
-  /// [court] is the ordered court.
-  final CourtDTO court;
+  /// [courtType] is the type of the court.
+  final String courtType;
 
   /// [date] is the date of the booking.
   final String date;
 
-  /// [bookStartTime] is the start time of the booking.
-  final String bookStartTime;
-
-  /// [bookEndTime] is the end time of the booking.
-  final String bookEndTime;
-
   /// [price] is the price of the booking.
   final double price;
+
+  /// [appFee] is the application fee of the booking.
+  final double appFee;
 
   OrderDTO({
     required this.id,
     required this.user,
-    required this.court,
+    required this.courtType,
     required this.date,
-    required this.bookStartTime,
-    required this.bookEndTime,
     required this.price,
+    required this.appFee,
   });
 
   /// [fromJson] is a factory method to create an [OrderDTO] from a map.
@@ -43,12 +38,11 @@ class OrderDTO {
   factory OrderDTO.fromJson(Map<String, dynamic> json) {
     return OrderDTO(
       id: json['id'],
-      user: json['user'],
-      court: json['court'],
+      user: UserDTO.fromJson(json['user']),
+      courtType: json['court_type'],
       date: json['date'],
-      bookStartTime: json['book_start_time'],
-      bookEndTime: json['book_end_time'],
-      price: json['price'],
+      price: json['price'] + .0,
+      appFee: json['app_fee'] + .0,
     );
   }
 }

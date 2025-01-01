@@ -34,8 +34,8 @@ class CourtDTO {
       id: json['id'],
       name: json['name'],
       type: json['type'],
-      price: json['price'],
-      imageUrl: json['imageUrl'],
+      price: json['price'] + .0,
+      imageUrl: json['image_url'],
     );
   }
 }

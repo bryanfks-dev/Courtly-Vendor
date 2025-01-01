@@ -58,13 +58,8 @@ class _OrdersPage extends State<OrdersPage> {
               ),
               ListView.separated(
                   shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) => OrderCard(
-                      date: state.orders[index].date,
-                      userName: state.orders[index].user.username,
-                      courtType: state.orders[index].court.type,
-                      bookStartTime: state.orders[index].bookStartTime,
-                      bookEndTime: state.orders[index].bookEndTime,
-                      price: state.orders[index].price),
+                  itemBuilder: (BuildContext context, int index) =>
+                      OrderCard(order: state.orders[index]),
                   separatorBuilder: (BuildContext context, _) => SizedBox(
                         height: _cardGap,
                       ),

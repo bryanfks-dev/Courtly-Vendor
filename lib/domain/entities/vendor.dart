@@ -38,7 +38,7 @@ class Vendor {
   /// Returns a [Vendor] object.
   factory Vendor.fromDTO(VendorDTO dto) {
     /// [timeFormatter] is a date formatter for time.
-    final DateFormat timeFormatter = DateFormat("hh:mm");
+    final DateFormat timeFormatter = DateFormat("HH:mm");
 
     return Vendor(
       id: dto.id,
