@@ -48,7 +48,7 @@ class OrderCard extends StatelessWidget {
           Text("Rp ${moneyFormatter(amount: order.price)}",
               style: TextStyle(
                   color: ColorSchemes.text,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   fontSize: 12)),
         ],
       ),
