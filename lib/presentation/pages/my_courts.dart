@@ -123,7 +123,8 @@ class _MyCourtsPage extends State<MyCourtsPage> {
                               },
                               separatorBuilder: (BuildContext context, _) =>
                                   const SizedBox(height: 10),
-                              itemCount: courtsCount.length)
+                              itemCount: courtsCount.length),
+                          const SizedBox(height: 20),
                         ]),
                   ));
             }),
