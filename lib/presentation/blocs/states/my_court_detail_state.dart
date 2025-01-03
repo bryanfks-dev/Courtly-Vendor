@@ -10,14 +10,13 @@ abstract class MyCourtDetailState {}
 /// This state will be used to initialize the [MyCourtDetailBloc].
 class MyCourtDetailInitialState extends MyCourtDetailState {}
 
-/// [MyCourtDetailLoadingState] is the loading state of the [MyCourtDetailBloc].
-/// This state will be used to show a loading indicator while the data is being
-/// fetched.
-class MyCourtDetailLoadingState extends MyCourtDetailState {}
+/// [MyCourtDetailFetchingState] is the fetching state of the [MyCourtDetailBloc].
+/// This state will be used to show a loading indicator while fetching the data.
+class MyCourtDetailFetchingState extends MyCourtDetailState {}
 
-/// [MyCourtDetailLoadedState] is the loaded state of the [MyCourtDetailBloc].
-/// This state will be used to display the court details.
-class MyCourtDetailLoadedState extends MyCourtDetailState {
+/// [MyCourtDetailFetchedState] is the fetched state of the [MyCourtDetailBloc].
+/// This state will be used to display the fetched data.
+class MyCourtDetailFetchedState extends MyCourtDetailState {
   /// [courts] is the list of courts.
   final List<Court> courts;
 
@@ -28,9 +27,36 @@ class MyCourtDetailLoadedState extends MyCourtDetailState {
   /// vendor details.
   final Vendor vendor;
 
-  MyCourtDetailLoadedState(
+  MyCourtDetailFetchedState(
       {required this.courts, required this.bookings, required this.vendor});
 }
+
+/// [MyCourtDetailUpdatingState] is the updating state of the [MyCourtDetailBloc].
+/// This state will be used to show a loading indicator while updating the data.
+class MyCourtDetailUpdatingState extends MyCourtDetailState {}
+
+/// [MyCourtDetailUpdatedState] is the updated state of the [MyCourtDetailBloc].
+/// This state will be used to show a success message if the data is updated
+/// successfully.
+class MyCourtDetailUpdatedState extends MyCourtDetailState {}
+
+/// [MyCourtDetailUpdateErrorState] is the delete error state of [MyCourtDetailBloc].
+/// This state will be used to show an error message if the data updating fails.
+class MyCourtDetailUpdateErrorState extends MyCourtDetailState {
+  /// [errorMessage] is the error message that will be displayed.
+  final dynamic errorMessage;
+
+  MyCourtDetailUpdateErrorState({required this.errorMessage});
+}
+
+/// [MyCourtDetailDeletingState] is the deleting state of the [MyCourtDetailBloc].
+/// This state will be used to show a loading indicator while deleting the data.
+class MyCourtDetailDeletingState extends MyCourtDetailState {}
+
+/// [MyCourtDetailDeletedState] is the deleted state of the [MyCourtDetailBloc].
+/// This state will be used to show a success message if the data is deleted
+/// successfully.
+class MyCourtDetailDeletedState extends MyCourtDetailState {}
 
 /// [MyCourtDetailErrorState] is the error state of the [MyCourtDetailBloc].
 /// This state will be used to show an error message if the data fetching fails.

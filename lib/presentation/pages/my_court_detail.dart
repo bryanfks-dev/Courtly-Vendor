@@ -5,6 +5,7 @@ import 'package:courtly_vendor/domain/entities/booking.dart';
 import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
 import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
+import 'package:courtly_vendor/presentation/validators/update_court_form_validator.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
@@ -52,12 +53,26 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// [_selectedDate] is the selected date.
   DateTime _selectedDate = DateTime.now();
 
+  /// [_updateErrorTexts] is the error text for text form fields
+  late Map<String, String?> _updateErrorTexts;
+
   /// [weekDays] is the list of week days.
   final List<DateTime> weekDays =
       List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
   /// [_timeSlots] is the list of time slots.
   late List<String> _timeSlots;
+
+  // Schedule for each date (key = date, value = grid data)
+  Map<String, List<List<bool>>> schedules = {};
+
+  /// [_initializeUpdateErrorTexts] is a method to initialize the [_updateErrorTexts]
+  /// variable.
+  ///
+  /// Returns [void]
+  void _initializeUpdateErrorTexts() {
+    _updateErrorTexts = {"pricePerHour": null};
+  }
 
   /// [_generateTimeSlots] is a function that generates the time slots between the start and end time.
   ///
@@ -95,9 +110,6 @@ class _CourtDetailState extends State<MyCourtDetail> {
   String _formatMonth(DateTime date) {
     return DateFormat("MMM").format(date);
   }
-
-  // Schedule for each date (key = date, value = grid data)
-  Map<String, List<List<bool>>> schedules = {};
 
   /// [_initializeSchedule] is a function that initializes the schedule for the selected date.
   ///
@@ -213,6 +225,146 @@ class _CourtDetailState extends State<MyCourtDetail> {
         ));
   }
 
+  /// [_openUpdateModal] is a function that opens the update modal.
+  ///
+  /// Parameters:
+  ///   - [context]: The build context.
+  ///   - [courtType]: The type of the court.
+  ///   - [courtPrice]: The price of the court.
+  ///
+  /// Returns [void]
+  void _openUpdateModal(BuildContext context,
+      {required String courtType, required double courtPrice}) {
+    // Create update court form validator
+    final UpdateCourtFormValidator validator = UpdateCourtFormValidator();
+
+    /// [controllers] is the text editting controller for text form fields
+    final Map<String, TextEditingController> controllers = {
+      "pricePerHour": TextEditingController(text: courtPrice.toInt().toString())
+    };
+
+    // Init update error texts map
+    _initializeUpdateErrorTexts();
+
+    /// [validateForm] is a function that validates the form.
+    ///
+    /// Returns a [bool] that indicates if the form is valid.
+    bool validateForm(StateSetter setUpdateFormState) {
+      setUpdateFormState(() {
+        _updateErrorTexts["pricePerHour"] = validator.validatePricePerHour(
+            pricePerHour: controllers["pricePerHour"]!.text);
+      });
+
+      return _updateErrorTexts["pricePerHour"] == null;
+    }
+
+    showBottomModalSheet(context, StatefulBuilder(
+        builder: (BuildContext context, StateSetter setUpdateFormState) {
+      return BlocConsumer<MyCourtDetailBloc, MyCourtDetailState>(
+          listener: (BuildContext context, MyCourtDetailState state) {
+        // Check for state
+        if (state is MyCourtDetailUpdateErrorState) {
+          // Check for error message data type
+          if (state.errorMessage is String) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+
+          if (state.errorMessage is Map) {
+            setUpdateFormState(() {
+              _updateErrorTexts["pricePerHour"] =
+                  state.errorMessage["price_per_hour"]?.first;
+            });
+          }
+
+          // Refetch the courts data
+          context
+              .read<MyCourtDetailBloc>()
+              .getCourtsData(courtType: courtType, date: _selectedDate);
+        }
+      }, builder: (BuildContext context, MyCourtDetailState state) {
+        return Form(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Update $courtType Court",
+              style: TextStyle(
+                  fontSize: 14,
+                  color: ColorSchemes.text,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 14,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Price / Hour",
+                  style: TextStyle(fontSize: 12, color: ColorSchemes.text),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  controller: controllers["pricePerHour"],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      prefixText: "Rp ",
+                      prefixStyle:
+                          TextStyle(fontSize: 14, color: ColorSchemes.text),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      label: Text("Rp $courtPrice",
+                          style: TextStyle(
+                              fontSize: 14, color: ColorSchemes.highlight)),
+                      errorText: _updateErrorTexts["pricePerHour"],
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 15),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: ColorSchemes.subtle))),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 18,
+            ),
+            PrimaryButton(
+                onPressed: () {
+                  // Validate the form
+                  if (!validateForm(setUpdateFormState)) {
+                    return;
+                  }
+
+                  // Check if current court data is the same as the new data
+                  if (double.parse(controllers["pricePerHour"]!.text) ==
+                      courtPrice) {
+                    Navigator.pop(context);
+
+                    return;
+                  }
+
+                  // Update the court
+                  context.read<MyCourtDetailBloc>().updateCourt(
+                      courtType: courtType,
+                      pricePerHour:
+                          double.parse(controllers["pricePerHour"]!.text));
+                },
+                style: ButtonStyle(
+                  minimumSize:
+                      WidgetStateProperty.all(const Size.fromHeight(0)),
+                ),
+                child: Text(
+                  "Change",
+                  style: TextStyle(
+                      fontSize: 14, color: ColorSchemes.primaryBackground),
+                ))
+          ],
+        ));
+      });
+    }));
+  }
+
   /// [_initializeMoreMenus] is a function that initializes the more menus.
   ///
   /// Returns [void]
@@ -306,6 +458,10 @@ class _CourtDetailState extends State<MyCourtDetail> {
       // Update the selected date
       _selectedDate = newDate;
     });
+
+    // Retrieve the courts data
+    BlocProvider.of<MyCourtDetailBloc>(context)
+        .getCourtsData(courtType: widget.courtType, date: _selectedDate);
   }
 
   /// [_getTitleWidget] is a function that generates the title widget for the table.
@@ -394,12 +550,11 @@ class _CourtDetailState extends State<MyCourtDetail> {
               listener: (BuildContext context, MyCourtDetailState state) {
         // Check for states
         if (state is MyCourtDetailErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.errorMessage),
-          ));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
         }
 
-        if (state is MyCourtDetailLoadedState) {
+        if (state is MyCourtDetailFetchedState) {
           // Initialize time slot
           _timeSlots =
               _generateTimeSlots(state.vendor.openTime, state.vendor.closeTime);
@@ -422,9 +577,37 @@ class _CourtDetailState extends State<MyCourtDetail> {
                         )));
           }
         }
+
+        if (state is MyCourtDetailUpdatedState) {
+          Navigator.pop(context);
+
+          // Show success snackbar
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Success Update Court!"),
+          ));
+
+          // Fetch the list of courts
+          context
+              .read<MyCourtDetailBloc>()
+              .getCourtsData(courtType: widget.courtType, date: _selectedDate);
+        }
+
+        if (state is MyCourtDetailDeletedState) {
+          Navigator.pop(context);
+
+          // Show success snackbar
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Success Delete Court!"),
+          ));
+
+          // Fetch the list of courts
+          context
+              .read<MyCourtDetailBloc>()
+              .getCourtsData(courtType: widget.courtType, date: _selectedDate);
+        }
       }, builder: (BuildContext context, MyCourtDetailState state) {
         // Check for states
-        if (state is! MyCourtDetailLoadedState || state.courts.isEmpty) {
+        if (state is! MyCourtDetailFetchedState || state.courts.isEmpty) {
           return const LoadingScreen();
         }
 
@@ -459,7 +642,11 @@ class _CourtDetailState extends State<MyCourtDetail> {
                   ],
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    _openUpdateModal(context,
+                        courtType: widget.courtType,
+                        courtPrice: state.courts[0].price);
+                  },
                   overlayColor:
                       const WidgetStatePropertyAll(Colors.transparent),
                   child: HeroIcon(HeroIcons.pencilSquare,
@@ -544,7 +731,8 @@ class _CourtDetailState extends State<MyCourtDetail> {
               itemCount: _timeSlots.length,
               leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
               rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-            ))
+            )),
+            const SizedBox(height: PAGE_PADDING_MOBILE)
           ]),
         );
       })),

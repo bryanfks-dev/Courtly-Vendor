@@ -142,4 +142,36 @@ class ApiRepository {
       return left(UnknownFailure(e.toString()));
     }
   }
+
+  /// [put] is a function to make a PUT request to the API.
+  /// This function will make a PUT request to the API with the given endpoint.
+  /// The [body] parameter is the data that will be sent to the API.
+  ///
+  /// Returns a [Future] of [Either] a [Failure] or [http.Response].
+  Future<Either<Failure, http.Response>> put(
+      {required String endpoint,
+      Map<String, dynamic>? body,
+      required int timeoutInSec}) async {
+    try {
+      /// Make a PUT request to the API.
+      final res = await http
+          .put(Uri.parse('$_apiUrl/$endpoint'),
+              headers: {
+                ..._headers,
+                if (_token != null) 'Authorization': 'Bearer $_token',
+              },
+              body: json.encode(body))
+          .timeout(Duration(seconds: timeoutInSec));
+
+      return right(res);
+    } on SocketException catch (_) {
+      return left(const NetworkFailure());
+    } on HttpException catch (_) {
+      return left(const RequestFailure("Cannot reach the server"));
+    } on TimeoutException catch (_) {
+      return left(const RequestFailure());
+    } on Exception catch (e) {
+      return left(UnknownFailure(e.toString()));
+    }
+  }
 }

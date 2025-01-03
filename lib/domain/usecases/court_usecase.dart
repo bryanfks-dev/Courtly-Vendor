@@ -4,6 +4,7 @@ import 'package:courtly_vendor/data/dto/court_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_response_dto.dart';
 import 'package:courtly_vendor/data/dto/add_new_court_form_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
+import 'package:courtly_vendor/data/dto/update_court_form_dto.dart';
 import 'package:courtly_vendor/data/repository/api/court_repository.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
 import 'package:courtly_vendor/domain/entities/court.dart';
@@ -79,5 +80,25 @@ class CourtUsecase {
 
     return res.fold((l) => Left(l),
         (r) => Right(r.map((e) => Booking.fromDTO(e)).toList()));
+  }
+
+  /// [updateCourt] is a method used to update the court.
+  ///
+  /// Parameters:
+  ///   - [courtType] is the type of the court.
+  ///   - [pricePerHour] is the price per hour.
+  ///
+  /// Returns a [Future] of [Failure] or null.
+  Future<Failure?> updateCourt(
+      {required String courtType, required double pricePerHour}) async {
+    // Create the update court form dto
+    final UpdateCourtFormDTO formDto =
+        UpdateCourtFormDTO(pricePerHour: pricePerHour);
+
+    // Make a PUT request to the API.
+    final Failure? res =
+        await courtRepository.putCourt(courtType: courtType, formDto: formDto);
+
+    return res;
   }
 }

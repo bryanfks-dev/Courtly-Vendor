@@ -20,9 +20,6 @@ class LoginPage extends StatelessWidget {
   /// [_loginFormValidator] is the login form validator.
   final LoginFormValidator _loginFormValidator = LoginFormValidator();
 
-  /// [_formKey] is the key for the form.
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   /// [_textInputControllers] is the map of text input keys.
   final Map<String, TextEditingController> _textInputControllers = {
     "email": TextEditingController(),
@@ -115,58 +112,53 @@ class LoginPage extends StatelessWidget {
                               height: 40,
                             ),
                             Form(
-                                key: _formKey,
                                 child: Column(
-                                  children: [
-                                    TextFormField(
+                              children: [
+                                TextFormField(
+                                    controller: _textInputControllers["email"],
+                                    style: const TextStyle(fontSize: 14),
+                                    decoration: InputDecoration(
+                                      label: const Text("Email"),
+                                      errorText: _errorTexts["email"],
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 0, horizontal: 15),
+                                    )),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                ValueListenableBuilder(
+                                    valueListenable: _obsecureTextNotifier,
+                                    builder: (BuildContext context,
+                                        bool obsecureText, _) {
+                                      return TextFormField(
                                         controller:
-                                            _textInputControllers["email"],
+                                            _textInputControllers["password"],
                                         style: const TextStyle(fontSize: 14),
+                                        obscureText: obsecureText,
+                                        enableSuggestions: false,
+                                        autocorrect: false,
                                         decoration: InputDecoration(
-                                          label: const Text("Email"),
-                                          errorText: _errorTexts["email"],
+                                          label: const Text("Password"),
+                                          errorText: _errorTexts["password"],
                                           contentPadding:
                                               const EdgeInsets.symmetric(
                                                   vertical: 0, horizontal: 15),
-                                        )),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    ValueListenableBuilder(
-                                        valueListenable: _obsecureTextNotifier,
-                                        builder: (BuildContext context,
-                                            bool obsecureText, _) {
-                                          return TextFormField(
-                                            controller: _textInputControllers[
-                                                "password"],
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                            obscureText: obsecureText,
-                                            enableSuggestions: false,
-                                            autocorrect: false,
-                                            decoration: InputDecoration(
-                                              label: const Text("Password"),
-                                              errorText:
-                                                  _errorTexts["password"],
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 0,
-                                                      horizontal: 15),
-                                              suffixIcon: IconButton(
-                                                icon: HeroIcon((obsecureText)
-                                                    ? HeroIcons.eyeSlash
-                                                    : HeroIcons.eye),
-                                                iconSize: 16,
-                                                onPressed: () {
-                                                  _obsecureTextNotifier.value =
-                                                      !obsecureText;
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  ],
-                                )),
+                                          suffixIcon: IconButton(
+                                            icon: HeroIcon((obsecureText)
+                                                ? HeroIcons.eyeSlash
+                                                : HeroIcons.eye),
+                                            iconSize: 16,
+                                            onPressed: () {
+                                              _obsecureTextNotifier.value =
+                                                  !obsecureText;
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            )),
                             const SizedBox(height: 40),
                             PrimaryButton(
                               onPressed: () {
@@ -179,11 +171,6 @@ class LoginPage extends StatelessWidget {
                                     _loginFormValidator.validatePassword(
                                         _textInputControllers["password"]!
                                             .text);
-
-                                // Validate the form.
-                                if (!_formKey.currentState!.validate()) {
-                                  return;
-                                }
 
                                 // Submit the login form.
                                 controller.login(

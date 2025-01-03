@@ -24,7 +24,7 @@ class MyCourtDetailBloc extends Cubit<MyCourtDetailState> {
 
   /// [getCourtsData] is a method that fetches the court details and the
   /// bookings for the given date.
-  /// 
+  ///
   /// Parameters:
   ///   - [courtType]: The type of the court.
   ///   - [date]: The date for which the bookings are to be fetched.
@@ -32,7 +32,7 @@ class MyCourtDetailBloc extends Cubit<MyCourtDetailState> {
   /// Returns [void].
   Future<void> getCourtsData(
       {required String courtType, required DateTime date}) async {
-    emit(MyCourtDetailLoadingState());
+    emit(MyCourtDetailFetchingState());
 
     // Fetch the court details.
     final res = await Future.wait([
@@ -76,10 +76,34 @@ class MyCourtDetailBloc extends Cubit<MyCourtDetailState> {
       return;
     }
 
-    // Emit the loaded state.
-    emit(MyCourtDetailLoadedState(
+    emit(MyCourtDetailFetchedState(
         courts: courts.getOrElse(() => throw "No Courts Response"),
         bookings: bookings.getOrElse(() => throw "No Bookings Response"),
         vendor: vendor.getOrElse(() => throw "No Vendor Response")));
+  }
+
+  /// [updateCourt] is a method to update the court.
+  ///
+  /// Parameters:
+  ///   - [courtType] is the court type
+  ///   - [pricePerHour] is the court price per hour
+  ///
+  /// Returns [Future] of [void]
+  Future<void> updateCourt(
+      {required String courtType, required double pricePerHour}) async {
+    emit(MyCourtDetailUpdatingState());
+
+    // Update the court.
+    final Failure? res = await courtUsecase.updateCourt(
+        courtType: courtType, pricePerHour: pricePerHour);
+
+    // Check if the request is not success
+    if (res != null) {
+      emit(MyCourtDetailUpdateErrorState(errorMessage: res.errorMessage));
+
+      return;
+    }
+
+    emit(MyCourtDetailUpdatedState());
   }
 }
