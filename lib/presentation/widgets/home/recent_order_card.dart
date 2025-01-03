@@ -1,6 +1,7 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/utils/money_formatter.dart';
 import 'package:courtly_vendor/domain/entities/order.dart';
+import 'package:courtly_vendor/presentation/pages/order_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,7 +21,14 @@ class RecentOrderCard extends StatelessWidget {
     final DateFormat dateFormatter = DateFormat("MMM d, yyyy");
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        // Navigate to the order detail page.
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    OrderDetailPage(orderId: order.id)));
+      },
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       child: Container(
         padding: const EdgeInsets.all(14),

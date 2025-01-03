@@ -10,7 +10,7 @@ class VendorDTO {
   final String address;
 
   /// [email] is the email of the vendor.
-  final String email;
+  final String? email;
 
   /// [openTime] is the opening time of the vendor.
   final String openTime;
@@ -22,7 +22,7 @@ class VendorDTO {
     required this.id,
     required this.name,
     required this.address,
-    required this.email,
+    this.email,
     required this.openTime,
     required this.closeTime,
   });

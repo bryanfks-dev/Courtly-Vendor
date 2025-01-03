@@ -24,6 +24,7 @@ import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/order_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/orders_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
@@ -92,6 +93,11 @@ class _MyApp extends State<MyApp> {
             create: (BuildContext context) => OrdersBloc(
                 orderUsecase:
                     OrderUsecase(orderRepository: OrderRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => OrderDetailBloc(
+                orderUsecase: OrderUsecase(orderRepository: OrderRepository()),
+                vendorUsecase:
+                    VendorUsecase(vendorRepository: VendorRepository()))),
         BlocProvider(
             create: (BuildContext context) => ReviewsBloc(
                 reviewUsecase:
