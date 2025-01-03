@@ -65,6 +65,7 @@ class AppThemes {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: ColorSchemes.error),
           )),
+D
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         iconColor: WidgetStatePropertyAll(ColorSchemes.highlight),
