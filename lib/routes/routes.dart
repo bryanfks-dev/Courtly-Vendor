@@ -6,10 +6,4 @@ class Routes {
 
   /// [changePassword] is the change password route.
   static String changePassword = "/change-password";
-
-  /// [detailCourts] is the detail courts route.
-  static String detailCourts = "/detail-courts";
-
-  /// [addNewCourt] is the add new court route.
-  static String addNewCourt = "/add-new-court";
 }

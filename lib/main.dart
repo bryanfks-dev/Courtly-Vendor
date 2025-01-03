@@ -23,15 +23,14 @@ import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/order_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/orders_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
-import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
-import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
 import 'package:courtly_vendor/presentation/pages/my_courts.dart';
 import 'package:courtly_vendor/presentation/widgets/app_scaffold.dart';
@@ -107,6 +106,11 @@ class _MyApp extends State<MyApp> {
                 courtUsecase:
                     CourtUsecase(courtRepository: CourtRepository()))),
         BlocProvider(
+            create: (BuildContext context) => MyCourtDetailBloc(
+                courtUsecase: CourtUsecase(courtRepository: CourtRepository()),
+                vendorUsecase:
+                    VendorUsecase(vendorRepository: VendorRepository()))),
+        BlocProvider(
             create: (BuildContext context) => LogoutBloc(
                 logoutUsecase: LogoutUsecase(
                     logoutRepository: LogoutRepository(),
@@ -118,9 +122,7 @@ class _MyApp extends State<MyApp> {
         theme: AppThemes.light,
         routes: {
           Routes.myCourts: (context) => const MyCourtsPage(),
-          Routes.detailCourts: (context) => const MyCourtDetail(),
           Routes.changePassword: (context) => const ChangePasswordPage(),
-          Routes.addNewCourt: (context) => const AddNewCourtPage(),
         },
         home: BlocBuilder<AuthBloc, AuthState>(
             builder: (BuildContext context, AuthState state) {

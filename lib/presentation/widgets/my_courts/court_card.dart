@@ -1,7 +1,8 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
-import 'package:courtly_vendor/routes/routes.dart';
+import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:flutter/material.dart';
 
+/// [CourtCard] is a widget that displays the court card.
 class CourtCard extends StatelessWidget {
   const CourtCard(
       {super.key, required this.courtType, required this.courtCount});
@@ -17,7 +18,11 @@ class CourtCard extends StatelessWidget {
     return InkWell(
         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         onTap: () {
-          Navigator.of(context).pushNamed(Routes.detailCourts);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      MyCourtDetail(courtType: courtType)));
         },
         child: Container(
           padding: const EdgeInsets.all(16),

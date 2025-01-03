@@ -11,7 +11,10 @@ import 'package:heroicons/heroicons.dart';
 /// This page is used to add a new court to the vendor's list of courts.
 /// This page will be dispalyed only once for every court type.
 class AddNewCourtPage extends StatefulWidget {
-  const AddNewCourtPage({super.key});
+  const AddNewCourtPage({super.key, required this.courtType});
+
+  /// [courtType] is a String that stores the type of the court.
+  final String courtType;
 
   @override
   State<AddNewCourtPage> createState() => _AddNewCourtPage();
@@ -66,7 +69,7 @@ class _AddNewCourtPage extends State<AddNewCourtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BackableCenteredAppBar(title: "New Court"),
+      appBar: BackableCenteredAppBar(title: "New ${widget.courtType} Court"),
       backgroundColor: ColorSchemes.primaryBackground,
       body: SafeArea(
           child: Padding(

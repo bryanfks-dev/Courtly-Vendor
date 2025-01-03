@@ -1,37 +1,143 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/core/utils/money_formatter.dart';
+import 'package:courtly_vendor/domain/entities/booking.dart';
+import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
+import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
+import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/my_court_detail/delete_chip.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+import 'package:intl/intl.dart';
 
 /// [MyCourtDetail] is a [StatefulWidget] that displays the detail of a court.
 /// This widget is used to display the detail of a court, including the schedule
 class MyCourtDetail extends StatefulWidget {
-  const MyCourtDetail({super.key});
+  const MyCourtDetail({super.key, required this.courtType});
+
+  /// [courtType] is the type of the court.
+  final String courtType;
 
   @override
   State<MyCourtDetail> createState() => _CourtDetailState();
 }
 
 class _CourtDetailState extends State<MyCourtDetail> {
-  /// [_courts] is a list of courts.
-  List<dynamic> _courts = [
-    "Court 1",
-    "Court 2",
-    "Court 3",
-    "Court 4",
-    "Court 5",
-    "Court 6",
-    "Court 7",
-    "Court 8",
-    "Court 9",
-    "Court 10",
-  ];
+  /// [_bookedBoxes] is a list of booked boxes.
+  /// This list is used to store the booked boxes.
+  final List<int> _bookedBoxes = [];
+
+  /// [_courtsName] is the list of courts name.
+  late List<String> _courtsName;
+
+  /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
+  late List<Widget> _moreMenus;
+
+  /// [_gridBoxWidth] is the width of the grid box.
+  final double _gridBoxWidth = 90;
+
+  /// [_gridBoxHeight] is the height of the grid box.
+  final double _gridBoxHeight = 56;
+
+  /// [_timeColumnWidth] is the width of the time column.
+  final double _timeColumnWidth = 70;
+
+  /// [_selectedDate] is the selected date.
+  DateTime _selectedDate = DateTime.now();
+
+  final List<DateTime> weekDays =
+      List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
+
+  /// [_timeSlots] is the list of time slots.
+  late List<String> _timeSlots;
+
+  /// [_generateTimeSlots] is a function that generates the time slots between the start and end time.
+  ///
+  /// Parameters:
+  ///   - [start] is the start time.
+  ///   - [end] is the end time.
+  ///
+  /// Returns a [List] of [String]
+  List<String> _generateTimeSlots(DateTime start, DateTime end) {
+    final int hourDiff = end.difference(start).inHours;
+
+    return List.generate(hourDiff, (index) {
+      final DateTime time = start.add(Duration(hours: index));
+
+      return "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+    });
+  }
+
+  /// [_formatWeekday] is a function that formats the weekday.
+  ///
+  /// Parameters:
+  ///   - [date] is the date to be formatted.
+  ///
+  /// Returns a [String] that represents the formatted weekday.
+  String _formatWeekday(DateTime date) {
+    return DateFormat("E").format(date);
+  }
+
+  /// [_formatMonth] is a function that formats the month.
+  ///
+  /// Parameters:
+  ///   - [date] is the date to be formatted.
+  ///
+  /// Returns a [String] that represents the formatted month.
+  String _formatMonth(DateTime date) {
+    return DateFormat("MMM").format(date);
+  }
+
+  // Schedule for each date (key = date, value = grid data)
+  Map<String, List<List<bool>>> schedules = {};
+
+  /// [_initializeSchedule] is a function that initializes the schedule for the selected date.
+  ///
+  /// Returns [void]
+  void _initializeSchedule() {
+    String dateKey = _formatDateKey(_selectedDate);
+
+    schedules[dateKey] = List.generate(
+      _timeSlots.length,
+      (_) => List.generate(_courtsName.length, (_) => false),
+    );
+  }
+
+  /// [_encodeBookingValue] is a function that encodes the booking value.
+  ///
+  /// Parameters:
+  ///   - [timeIndex] is the index of the time.
+  ///   - [courtIndex] is the index of the court.
+  ///
+  /// Returns an [int] that represents the encoded booking value.
+  int _encodeBookingValue(int timeIndex, int courtIndex) {
+    return courtIndex + timeIndex * _courtsName.length;
+  }
+
+  /// [_initBookedBoxes] is a function that initializes the booked boxes.
+  ///
+  /// Parameters:
+  ///   - [bookings] is the list of bookings.
+  ///
+  /// Returns [void]
+  void _initBookedBoxes(List<Booking> bookings) {
+    // Clear the booked boxes
+    _bookedBoxes.clear();
+
+    // Encode the booking value
+    for (Booking booking in bookings) {
+      _bookedBoxes.add(_encodeBookingValue(
+          _timeSlots.indexOf(DateFormat("HH:mm").format(booking.startTime)),
+          _courtsName.indexOf(booking.court.name)));
+    }
+  }
 
   /// [openDeleteModal] is a function that opens the delete modal.
   /// This function will open a modal that allows the user to select the courts to delete.
@@ -39,7 +145,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// Parameters:
   ///   - [context]: The build context.
   ///
-  /// Returns: [void]
+  /// Returns [void]
   void openDeleteModal(BuildContext context) {
     showBottomModalSheet(
         context,
@@ -59,9 +165,8 @@ class _CourtDetailState extends State<MyCourtDetail> {
               child: SingleChildScrollView(
                   child: Wrap(
                       spacing: 6,
-                      children: _courts
-                          .map((item) =>
-                              DeleteChip(label: "Court 1", onTap: () {}))
+                      children: _courtsName
+                          .map((item) => DeleteChip(label: item, onTap: () {}))
                           .toList())),
             ),
             const SizedBox(
@@ -107,63 +212,14 @@ class _CourtDetailState extends State<MyCourtDetail> {
         ));
   }
 
-  /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
-  late List<Widget> _moreMenus;
-
-  /// [_gridBoxWidth] is the width of the grid box.
-  final double _gridBoxWidth = 90;
-
-  /// [_gridBoxHeight] is the height of the grid box.
-  final double _gridBoxHeight = 56;
-
-  /// [_timeColumnWidth] is the width of the time column.
-  final double _timeColumnWidth = 70;
-
-  DateTime selectedDate = DateTime.now();
-
-  final List<DateTime> weekDays =
-      List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
-
-  final List<String> timeSlots = [
-    "08:00",
-    "09:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-    "23:00",
-  ];
-
-  // Schedule for each date (key = date, value = grid data)
-  Map<String, List<List<bool>>> schedules = {};
-
-  /// _initializeSchedule is a function that initializes the schedule for the selected date.
-  void _initializeSchedule() {
-    String dateKey = _formatDateKey(selectedDate);
-
-    schedules[dateKey] = List.generate(
-      timeSlots.length,
-      (_) => List.generate(_courts.length, (_) => false),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialize the more menus
+  /// [_initializeMoreMenus] is a function that initializes the more menus.
+  ///
+  /// Returns [void]
+  void _initializeMoreMenus() {
     _moreMenus = [
       InkWell(
         onTap: () {},
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         child: Row(
           children: [
             HeroIcon(
@@ -184,6 +240,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
         onTap: () {
           openDeleteModal(context);
         },
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         child: Row(
           children: [
             HeroIcon(
@@ -201,8 +258,29 @@ class _CourtDetailState extends State<MyCourtDetail> {
         ),
       )
     ];
+  }
 
-    _initializeSchedule();
+  /// [_isBooked] is a function that checks if a box is booked.
+  ///
+  /// Parameters:
+  ///   - [courtIndex] is the index of the court.
+  ///   - [timeIndex] is the index of the time.
+  ///
+  /// Returns a [bool] that indicates if the box is booked.
+  bool _isBooked(int courtIndex, int timeIndex) {
+    return _bookedBoxes.contains(_encodeBookingValue(timeIndex, courtIndex));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initializeMoreMenus();
+
+    // Fetch the list of courts
+    context
+        .read<MyCourtDetailBloc>()
+        .getCourtsData(courtType: widget.courtType, date: _selectedDate);
   }
 
   String _formatDateKey(DateTime date) {
@@ -215,11 +293,11 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// Parameters:
   /// - [newDate]: The new date that is selected.
   ///
-  /// Returns: [void]
+  /// Returns [void]
   void _onDateChanged(DateTime newDate) {
     setState(() {
       // Update the selected date
-      selectedDate = newDate;
+      _selectedDate = newDate;
     });
   }
 
@@ -229,7 +307,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   List<Widget> _getTitleWidget() {
     return [
       _getTitleItemWidget(label: 'Time', width: _timeColumnWidth),
-      ..._courts.map(
+      ..._courtsName.map(
           (court) => _getTitleItemWidget(label: court, width: _gridBoxWidth)),
     ];
   }
@@ -262,7 +340,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
       width: _gridBoxWidth,
       height: _gridBoxHeight,
       alignment: Alignment.center,
-      child: Text(timeSlots[index]),
+      child: Text(_timeSlots[index]),
     );
   }
 
@@ -274,25 +352,27 @@ class _CourtDetailState extends State<MyCourtDetail> {
   ///   - [index]: The index of the row.
   ///
   /// Returns: [Widget]
-  Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
+  Widget _generateRightHandSideColumnRow(BuildContext context, int timeIndex) {
     return Row(
-      children: List.generate(_courts.length, (colIndex) {
-        return GestureDetector(
-          child: Container(
+      children: List.generate(_courtsName.length, (courtIndex) {
+        // Check if the box is booked
+        final bool isBooked = _isBooked(courtIndex, timeIndex);
+
+        return Container(
             width: _gridBoxWidth,
             height: _gridBoxHeight,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isBooked ? ColorSchemes.subtle : Colors.transparent,
               border: Border.all(color: ColorSchemes.subtle),
             ),
-            child: const Center(
-              child: Text(
-                "Booked",
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ),
-          ),
-        );
+            child: isBooked
+                ? Center(
+                    child: Text(
+                    "Booked",
+                    style:
+                        TextStyle(fontSize: 12, color: ColorSchemes.highlight),
+                  ))
+                : const SizedBox.shrink());
       }),
     );
   }
@@ -303,147 +383,164 @@ class _CourtDetailState extends State<MyCourtDetail> {
       backgroundColor: ColorSchemes.primaryBackground,
       appBar: BackableCenteredAppBar(title: "My Court", moreMenus: _moreMenus),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: PAGE_PADDING_MOBILE),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Basketball Courts",
-                    style: TextStyle(
-                      color: ColorSchemes.text,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Price: Rp20,000/hour",
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              InkWell(
-                onTap: () {},
-                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                child: HeroIcon(HeroIcons.pencilSquare,
-                    size: 20, color: ColorSchemes.highlight),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 78,
-            width: double.maxFinite,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (BuildContext context, int index) {
-                /// [date] is the date of the current index.
-                DateTime date = weekDays[index];
+          child: BlocConsumer<MyCourtDetailBloc, MyCourtDetailState>(
+              listener: (BuildContext context, MyCourtDetailState state) {
+        // Check for states
+        if (state is MyCourtDetailErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.errorMessage),
+          ));
+        }
 
-                /// [isSelected] is a boolean that indicates whether the date is selected or not.
-                bool isSelected = selectedDate.day == date.day &&
-                    selectedDate.month == date.month;
+        if (state is MyCourtDetailLoadedState) {
+          // Initialize time slot
+          _timeSlots =
+              _generateTimeSlots(state.vendor.openTime, state.vendor.closeTime);
 
-                return InkWell(
-                  onTap: () {
-                    _onDateChanged(date);
-                  },
+          // Initialize courts name
+          _courtsName = state.courts.map((e) => e.name).toList();
+
+          _initializeSchedule();
+
+          _initBookedBoxes(state.bookings);
+
+          // Check if there are no courts
+          if (state.courts.isEmpty) {
+            // Navigate to add new court page
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => AddNewCourtPage(
+                          courtType: widget.courtType,
+                        )));
+          }
+        }
+      }, builder: (BuildContext context, MyCourtDetailState state) {
+        // Check for states
+        if (state is! MyCourtDetailLoadedState || state.courts.isEmpty) {
+          return const LoadingScreen();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: PAGE_PADDING_MOBILE),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${widget.courtType} Courts",
+                      style: TextStyle(
+                        color: ColorSchemes.text,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Price: Rp ${moneyFormatter(amount: state.courts[0].price)}/hour",
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                InkWell(
+                  onTap: () {},
                   overlayColor:
                       const WidgetStatePropertyAll(Colors.transparent),
-                  child: Column(
-                    children: [
-                      Text(
-                        _formatWeekday(date),
-                        style: TextStyle(
-                          color: isSelected
-                              ? ColorSchemes.primary
-                              : ColorSchemes.highlight,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        width: 50,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        decoration: BoxDecoration(
-                            color: isSelected
-                                ? ColorSchemes.primary
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: isSelected
-                                  ? ColorSchemes.primary
-                                  : ColorSchemes.subtle,
-                            )),
-                        child: Text(
-                          "${date.day} ${_formatMonth(date)}",
-                          textAlign: TextAlign.center,
+                  child: HeroIcon(HeroIcons.pencilSquare,
+                      size: 20, color: ColorSchemes.highlight),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 78,
+              width: double.maxFinite,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+                  /// [date] is the date of the current index.
+                  DateTime date = weekDays[index];
+
+                  /// [isSelected] is a boolean that indicates whether the date is selected or not.
+                  bool isSelected = _selectedDate.day == date.day &&
+                      _selectedDate.month == date.month;
+
+                  return InkWell(
+                    onTap: () {
+                      _onDateChanged(date);
+                    },
+                    overlayColor:
+                        const WidgetStatePropertyAll(Colors.transparent),
+                    child: Column(
+                      children: [
+                        Text(
+                          _formatWeekday(date),
                           style: TextStyle(
                             color: isSelected
-                                ? ColorSchemes.primaryBackground
+                                ? ColorSchemes.primary
                                 : ColorSchemes.highlight,
-                            fontSize: 12,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, _) =>
-                  const SizedBox(width: 6),
-              itemCount: weekDays.length,
+                        const SizedBox(height: 4),
+                        Container(
+                          width: 50,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: isSelected
+                                  ? ColorSchemes.primary
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: isSelected
+                                    ? ColorSchemes.primary
+                                    : ColorSchemes.subtle,
+                              )),
+                          child: Text(
+                            "${date.day} ${_formatMonth(date)}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? ColorSchemes.primaryBackground
+                                  : ColorSchemes.highlight,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, _) =>
+                    const SizedBox(width: 6),
+                itemCount: weekDays.length,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-              child: HorizontalDataTable(
-            leftHandSideColumnWidth: _timeColumnWidth,
-            rightHandSideColumnWidth: _courts.length * _gridBoxWidth,
-            isFixedHeader: true,
-            headerWidgets: _getTitleWidget(),
-            leftSideItemBuilder: _generateFirstColumnRow,
-            rightSideItemBuilder: _generateRightHandSideColumnRow,
-            itemCount: timeSlots.length,
-            leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-            rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-          ))
-        ]),
-      )),
+            const SizedBox(height: 10),
+            Expanded(
+                child: HorizontalDataTable(
+              leftHandSideColumnWidth: _timeColumnWidth,
+              rightHandSideColumnWidth: _courtsName.length * _gridBoxWidth,
+              isFixedHeader: true,
+              headerWidgets: _getTitleWidget(),
+              leftSideItemBuilder: _generateFirstColumnRow,
+              rightSideItemBuilder: _generateRightHandSideColumnRow,
+              itemCount: _timeSlots.length,
+              leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+              rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+            ))
+          ]),
+        );
+      })),
     );
-  }
-
-  String _formatWeekday(DateTime date) {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-    return days[date.weekday % 7];
-  }
-
-  String _formatMonth(DateTime date) {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    return months[date.month - 1];
   }
 }
