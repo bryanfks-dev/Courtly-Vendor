@@ -52,6 +52,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
   /// [_selectedDate] is the selected date.
   DateTime _selectedDate = DateTime.now();
 
+  /// [weekDays] is the list of week days.
   final List<DateTime> weekDays =
       List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
