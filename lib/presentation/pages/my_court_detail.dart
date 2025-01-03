@@ -283,8 +283,14 @@ class _CourtDetailState extends State<MyCourtDetail> {
         .getCourtsData(courtType: widget.courtType, date: _selectedDate);
   }
 
+  /// [_formatDateKey] is a function that formats the date key.
+  ///
+  /// Parameters:
+  ///   - [date] is the date to be formatted.
+  ///
+  /// Returns a [String] that represents the formatted date key.
   String _formatDateKey(DateTime date) {
-    return "${date.year}-${date.month}-${date.day}";
+    return DateFormat("yyyy-MM-dd").format(date);
   }
 
   /// [_onDateChanged] is a function that is called when the date is changed.
