@@ -140,14 +140,14 @@ class _CourtDetailState extends State<MyCourtDetail> {
     }
   }
 
-  /// [openDeleteModal] is a function that opens the delete modal.
+  /// [_openDeleteModal] is a function that opens the delete modal.
   /// This function will open a modal that allows the user to select the courts to delete.
   ///
   /// Parameters:
   ///   - [context]: The build context.
   ///
   /// Returns [void]
-  void openDeleteModal(BuildContext context) {
+  void _openDeleteModal(BuildContext context) {
     showBottomModalSheet(
         context,
         Column(
@@ -239,7 +239,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
       ),
       InkWell(
         onTap: () {
-          openDeleteModal(context);
+          _openDeleteModal(context);
         },
         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         child: Row(
