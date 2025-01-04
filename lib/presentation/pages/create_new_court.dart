@@ -98,8 +98,9 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
         }
 
         if (state is CreateNewCourtSuccessState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Court has been added.")));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  "A new ${widget.courtType.toLowerCase()} court has been created!")));
 
           Navigator.pushReplacement(
               context,
