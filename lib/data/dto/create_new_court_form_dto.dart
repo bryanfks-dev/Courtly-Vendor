@@ -1,7 +1,7 @@
 /// [CreateNewCourtFormDTO] is a class that contains the data of the new court form.
 class CreateNewCourtFormDTO {
   /// [pricePerHour] is the price per hour of the court
-  final int pricePerHour;
+  final double pricePerHour;
 
   /// [courtImage] is the image of the court
   final String courtImage;

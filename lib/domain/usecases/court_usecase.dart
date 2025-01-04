@@ -21,7 +21,7 @@ class CourtUsecase {
 
   CourtUsecase({required this.courtRepository});
 
-  /// [addNewCourt] is a method used to add a new court.
+  /// [createNewCourt] is a method used to create a new court.
   ///
   /// Parameters:
   ///   - [pricePerHour] is the price per hour of the court.
@@ -29,8 +29,8 @@ class CourtUsecase {
   ///   - [imageFile] is the image file of the court.
   ///
   /// Returns a [Failure] object.
-  Future<Failure?> addNewCourt(
-      {required int pricePerHour,
+  Future<Failure?> createNewCourt(
+      {required double pricePerHour,
       required File imageFile,
       required String courtType}) async {
     // Create the form dto

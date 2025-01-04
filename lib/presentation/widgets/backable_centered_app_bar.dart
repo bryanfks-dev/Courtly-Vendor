@@ -7,13 +7,18 @@ import 'package:heroicons/heroicons.dart';
 /// for the application that contains a centered title and back icon.
 class BackableCenteredAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const BackableCenteredAppBar({super.key, required this.title, this.moreMenus})
+  const BackableCenteredAppBar(
+      {super.key, required this.title, this.onBack, this.moreMenus})
       : preferredSize = const Size.fromHeight(56);
 
   @override
 
   /// [preferredSize] is the preferred size of the AppBar.
   final Size preferredSize;
+
+  /// [onBack] is the callback function that is called when the back icon is
+  /// clicked.
+  final VoidCallback? onBack;
 
   /// [title] is the custom title of the AppBar.
   final String title;
@@ -56,6 +61,11 @@ class BackableCenteredAppBar extends StatelessWidget
               size: 20, color: ColorSchemes.highlight),
           onPressed: () {
             Navigator.of(context).pop();
+
+            // Check if the onBack callback is not null.
+            if (onBack != null) {
+              onBack!();
+            }
           },
         ),
         titleTextStyle: TextStyle(

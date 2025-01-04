@@ -13,7 +13,7 @@ class CreateNewCourtBloc extends Cubit<CreateNewCourtState> {
   CreateNewCourtBloc({required this.courtUsecase})
       : super(CreateNewCourtInitialState());
 
-  /// [addNewCourt] is a method to add a new court.
+  /// [createNewCourt] is a method to create a new court.
   ///
   /// Parameters:
   ///   - [pricePerHour] is the price per hour of the court.
@@ -21,14 +21,14 @@ class CreateNewCourtBloc extends Cubit<CreateNewCourtState> {
   ///   - [courtType] is the type of the court.
   ///
   /// Returns a [Future] of [void].
-  Future<void> addNewCourt(
-      {required int pricePerHour,
+  Future<void> createNewCourt(
+      {required double pricePerHour,
       required File imageFile,
       required String courtType}) async {
     emit(CreateNewCourtLoadingState());
 
     // Execute the add new court usecase
-    final Failure? fail = await courtUsecase.addNewCourt(
+    final Failure? fail = await courtUsecase.createNewCourt(
         pricePerHour: pricePerHour, imageFile: imageFile, courtType: courtType);
 
     // Check if the request is not success

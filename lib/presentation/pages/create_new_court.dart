@@ -81,8 +81,20 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
               listener: (BuildContext context, CreateNewCourtState state) {
         // Check for states
         if (state is CreateNewCourtErrorState) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          // Check for error message data type
+          if (state.errorMessage is String) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+
+          if (state.errorMessage is Map) {
+            setState(() {
+              _errorTexts["pricePerHour"] =
+                  state.errorMessage["pricePerHour"]?.first;
+              _errorTexts["courtImage"] =
+                  state.errorMessage["courtImage"]?.first;
+            });
+          }
         }
 
         if (state is CreateNewCourtSuccessState) {
@@ -230,8 +242,12 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
                           return;
                         }
 
-                        // Back to the previous page
-                        Navigator.pop(context);
+                        // Create a new court
+                        context.read<CreateNewCourtBloc>().createNewCourt(
+                            pricePerHour: double.parse(
+                                _textInputControllers["pricePerHour"]!.text),
+                            imageFile: File(_image!.path),
+                            courtType: widget.courtType);
                       },
                       style: const ButtonStyle(
                         minimumSize: WidgetStatePropertyAll(Size.fromHeight(0)),

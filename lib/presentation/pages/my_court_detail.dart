@@ -3,6 +3,7 @@ import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/core/utils/money_formatter.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
 import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/update_court_state.dart';
 import 'package:courtly_vendor/presentation/blocs/update_court_bloc.dart';
@@ -551,7 +552,13 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorSchemes.primaryBackground,
-      appBar: BackableCenteredAppBar(title: "My Court", moreMenus: _moreMenus),
+      appBar: BackableCenteredAppBar(
+          title: "My Court",
+          onBack: () {
+            // Refresh the courts stats
+            context.read<MyCourtsBloc>().getCourtsStats();
+          },
+          moreMenus: _moreMenus),
       body: SafeArea(
           child: BlocConsumer<MyCourtDetailBloc, MyCourtDetailState>(
               listener: (BuildContext context, MyCourtDetailState state) {
