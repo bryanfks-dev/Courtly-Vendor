@@ -4,7 +4,9 @@ import 'package:courtly_vendor/core/utils/money_formatter.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
 import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
-import 'package:courtly_vendor/presentation/pages/add_new_court.dart';
+import 'package:courtly_vendor/presentation/blocs/states/update_court_state.dart';
+import 'package:courtly_vendor/presentation/blocs/update_court_bloc.dart';
+import 'package:courtly_vendor/presentation/pages/create_new_court.dart';
 import 'package:courtly_vendor/presentation/validators/update_court_form_validator.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
@@ -18,19 +20,19 @@ import 'package:heroicons/heroicons.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/intl.dart';
 
-/// [MyCourtDetail] is a [StatefulWidget] that displays the detail of a court.
+/// [MyCourtDetailPage] is a [StatefulWidget] that displays the detail of a court.
 /// This widget is used to display the detail of a court, including the schedule
-class MyCourtDetail extends StatefulWidget {
-  const MyCourtDetail({super.key, required this.courtType});
+class MyCourtDetailPage extends StatefulWidget {
+  const MyCourtDetailPage({super.key, required this.courtType});
 
   /// [courtType] is the type of the court.
   final String courtType;
 
   @override
-  State<MyCourtDetail> createState() => _CourtDetailState();
+  State<MyCourtDetailPage> createState() => _CourtDetailPage();
 }
 
-class _CourtDetailState extends State<MyCourtDetail> {
+class _CourtDetailPage extends State<MyCourtDetailPage> {
   /// [_bookedBoxes] is a list of booked boxes.
   /// This list is used to store the booked boxes.
   final List<int> _bookedBoxes = [];
@@ -260,10 +262,10 @@ class _CourtDetailState extends State<MyCourtDetail> {
 
     showBottomModalSheet(context, StatefulBuilder(
         builder: (BuildContext context, StateSetter setUpdateFormState) {
-      return BlocConsumer<MyCourtDetailBloc, MyCourtDetailState>(
-          listener: (BuildContext context, MyCourtDetailState state) {
+      return BlocConsumer<UpdateCourtBloc, UpdateCourtState>(
+          listener: (BuildContext context, UpdateCourtState state) {
         // Check for state
-        if (state is MyCourtDetailUpdateErrorState) {
+        if (state is UpdateCourtErrorState) {
           // Check for error message data type
           if (state.errorMessage is String) {
             ScaffoldMessenger.of(context)
@@ -276,13 +278,18 @@ class _CourtDetailState extends State<MyCourtDetail> {
                   state.errorMessage["price_per_hour"]?.first;
             });
           }
-
-          // Refetch the courts data
-          context
-              .read<MyCourtDetailBloc>()
-              .getCourtsData(courtType: courtType, date: _selectedDate);
         }
-      }, builder: (BuildContext context, MyCourtDetailState state) {
+
+        if (state is UpdateCourtSuccessState) {
+          // Close the modal
+          Navigator.pop(context);
+        }
+
+        // Refetch the courts data
+        context
+            .read<MyCourtDetailBloc>()
+            .getCourtsData(courtType: courtType, date: _selectedDate);
+      }, builder: (BuildContext context, UpdateCourtState state) {
         return Form(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +352,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
                   }
 
                   // Update the court
-                  context.read<MyCourtDetailBloc>().updateCourt(
+                  context.read<UpdateCourtBloc>().updateCourt(
                       courtType: courtType,
                       pricePerHour:
                           double.parse(controllers["pricePerHour"]!.text));
@@ -554,7 +561,7 @@ class _CourtDetailState extends State<MyCourtDetail> {
               .showSnackBar(SnackBar(content: Text(state.errorMessage)));
         }
 
-        if (state is MyCourtDetailFetchedState) {
+        if (state is MyCourtDetailLoadedState) {
           // Initialize time slot
           _timeSlots =
               _generateTimeSlots(state.vendor.openTime, state.vendor.closeTime);
@@ -572,42 +579,14 @@ class _CourtDetailState extends State<MyCourtDetail> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => AddNewCourtPage(
+                    builder: (BuildContext context) => CreateNewCourtPage(
                           courtType: widget.courtType,
                         )));
           }
         }
-
-        if (state is MyCourtDetailUpdatedState) {
-          Navigator.pop(context);
-
-          // Show success snackbar
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Success Update Court!"),
-          ));
-
-          // Fetch the list of courts
-          context
-              .read<MyCourtDetailBloc>()
-              .getCourtsData(courtType: widget.courtType, date: _selectedDate);
-        }
-
-        if (state is MyCourtDetailDeletedState) {
-          Navigator.pop(context);
-
-          // Show success snackbar
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Success Delete Court!"),
-          ));
-
-          // Fetch the list of courts
-          context
-              .read<MyCourtDetailBloc>()
-              .getCourtsData(courtType: widget.courtType, date: _selectedDate);
-        }
       }, builder: (BuildContext context, MyCourtDetailState state) {
-        // Check for states
-        if (state is! MyCourtDetailFetchedState || state.courts.isEmpty) {
+        // Check for states and court counts
+        if (state is! MyCourtDetailLoadedState || state.courts.isEmpty) {
           return const LoadingScreen();
         }
 

@@ -1,8 +1,8 @@
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
-/// [AddNewCourtFormValidator] is a class that validates the Add New Court form.
+/// [CreateNewCourtFormValidator] is a class that validates the Add New Court form.
 /// It checks if the price per hour and courts image are valid or not.
-class AddNewCourtFormValidator {
+class CreateNewCourtFormValidator {
   /// [validatePricePerHour] is a method that validates the price per hour.
   ///
   /// Parameters:
@@ -28,16 +28,16 @@ class AddNewCourtFormValidator {
     return null;
   }
 
-  /// [validateCourtsImage] is a method that validates the courts image.
+  /// [validateCourtImage] is a method that validates the court image.
   ///
   /// Parameters:
   ///   - [image]: The image to validate.
   ///
   /// Returns a [String] message.
-  String? validateCourtsImage({required FilePickerResult? image}) {
+  String? validateCourtImage({required XFile? image}) {
     // Check if the image is empty.
     if (image == null) {
-      return "Courts image is required";
+      return "Court image is required";
     }
 
     return null;

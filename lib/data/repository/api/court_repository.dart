@@ -6,7 +6,7 @@ import 'package:courtly_vendor/data/dto/booking_dto.dart';
 import 'package:courtly_vendor/data/dto/court_bookings_response_dto.dart';
 import 'package:courtly_vendor/data/dto/court_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_response_dto.dart';
-import 'package:courtly_vendor/data/dto/add_new_court_form_dto.dart';
+import 'package:courtly_vendor/data/dto/create_new_court_form_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/dto/update_court_form_dto.dart';
@@ -22,8 +22,15 @@ class CourtRepository {
   /// [_tokenRepository] is the token repository.
   final TokenRepository _tokenRepository = TokenRepository();
 
-  Future<Either<Failure, CourtsResponseDTO>> postNewCourt(
-      {required AddNewCourtFormDTO formDto, required String courtType}) async {
+  /// [postNewCourt] is the method that will be used to post a new court.
+  ///
+  /// Parameters:
+  ///   - [formDto] is the form data to post a new court.
+  ///   - [courtType] is the type of the court.
+  ///
+  /// Returns [Future] of [Either] [Failure] or [CourtDTO].
+  Future<Either<Failure, CourtDTO>> postNewCourt(
+      {required CreateNewCourtFormDTO formDto, required String courtType}) async {
     // Set the token from the storage
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 
@@ -43,8 +50,8 @@ class CourtRepository {
     final http.Response res = either.getOrElse(() => throw 'No response');
 
     // Parse the response
-    final ResponseDTO<CourtsResponseDTO> responseDto = ResponseDTO.fromJson(
-        json: jsonDecode(res.body), fromJsonT: CourtsResponseDTO.fromJson);
+    final ResponseDTO<CourtDTO> responseDto = ResponseDTO.fromJson(
+        json: jsonDecode(res.body), fromJsonT: CourtDTO.fromJson);
 
     // Check if the response is successful
     if (responseDto.success) {
@@ -59,6 +66,48 @@ class CourtRepository {
     return Left(UnknownFailure(responseDto.message));
   }
 
+  Future<Either<Failure, CourtDTO>> postAddCourt(
+      {required String courtType}) async {
+    // Set the token from the storage
+    await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
+
+    // Call the API to post a new court
+    final Either<Failure, http.Response> either = await _apiRepository.post(
+        endpoint: "vendors/me/courts/types/$courtType", timeoutInSec: 2);
+
+    // Check for failure
+    if (either.isLeft()) {
+      return Left(
+          either.fold((l) => l, (r) => const UnknownFailure('Unknown error')));
+    }
+
+    // Get the response
+    final http.Response res = either.getOrElse(() => throw 'No response');
+
+    // Parse the response
+    final ResponseDTO<CourtDTO> responseDto = ResponseDTO.fromJson(
+        json: jsonDecode(res.body), fromJsonT: CourtDTO.fromJson);
+
+    // Check if the response is successful
+    if (responseDto.success) {
+      return Right(responseDto.data!);
+    }
+
+    // Check for status codes
+    if (res.statusCode == HttpStatus.internalServerError) {
+      return Left(ServerFailure(responseDto.message));
+    }
+
+    if (res.statusCode == HttpStatus.badRequest) {
+      return Left(RequestFailure(responseDto.message));
+    }
+
+    return Left(UnknownFailure(responseDto.message));
+  }
+
+  /// [getCourtsStats] is the method that will be used to get the courts stats.
+  ///
+  /// Returns [Future] of [Either] [Failure] or [CourtsStatsResponseDTO].
   Future<Either<Failure, CourtsStatsResponseDTO>> getCourtsStats() async {
     await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
 

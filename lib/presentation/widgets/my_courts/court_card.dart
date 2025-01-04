@@ -22,7 +22,7 @@ class CourtCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      MyCourtDetail(courtType: courtType)));
+                      MyCourtDetailPage(courtType: courtType)));
         },
         child: Container(
           padding: const EdgeInsets.all(16),

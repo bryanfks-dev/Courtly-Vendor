@@ -19,6 +19,7 @@ import 'package:courtly_vendor/domain/usecases/vendor_usecase.dart';
 import 'package:courtly_vendor/domain/usecases/verify_password_usecase.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/change_password_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/create_new_court_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
@@ -29,6 +30,7 @@ import 'package:courtly_vendor/presentation/blocs/order_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/orders_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
+import 'package:courtly_vendor/presentation/blocs/update_court_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
 import 'package:courtly_vendor/presentation/pages/change_password.dart';
 import 'package:courtly_vendor/presentation/pages/login.dart';
@@ -110,6 +112,14 @@ class _MyApp extends State<MyApp> {
                 courtUsecase: CourtUsecase(courtRepository: CourtRepository()),
                 vendorUsecase:
                     VendorUsecase(vendorRepository: VendorRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => UpdateCourtBloc(
+                courtUsecase:
+                    CourtUsecase(courtRepository: CourtRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => CreateNewCourtBloc(
+                courtUsecase:
+                    CourtUsecase(courtRepository: CourtRepository()))),
         BlocProvider(
             create: (BuildContext context) => LogoutBloc(
                 logoutUsecase: LogoutUsecase(
