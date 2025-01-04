@@ -31,7 +31,13 @@ class _MyCourtsPage extends State<MyCourtsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MyCourtsBloc, MyCourtsState>(
-      listener: (BuildContext context, MyCourtsState state) {},
+      listener: (BuildContext context, MyCourtsState state) {
+        // Check for states
+        if (state is MyCourtsErrorState) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        }
+      },
       builder: (BuildContext context, MyCourtsState state) {
         return Scaffold(
           backgroundColor: ColorSchemes.primaryBackground,
