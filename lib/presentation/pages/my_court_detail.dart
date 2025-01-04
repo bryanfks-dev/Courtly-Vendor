@@ -2,8 +2,10 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/core/utils/money_formatter.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
+import 'package:courtly_vendor/presentation/blocs/add_court_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/add_court_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/update_court_state.dart';
 import 'package:courtly_vendor/presentation/blocs/update_court_bloc.dart';
@@ -378,25 +380,51 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   /// Returns [void]
   void _initializeMoreMenus() {
     _moreMenus = [
-      InkWell(
-        onTap: () {},
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-        child: Row(
-          children: [
-            HeroIcon(
-              HeroIcons.plus,
-              color: ColorSchemes.primary,
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            const Text(
-              "Add New Court",
-              style: TextStyle(fontSize: 14),
-            )
-          ],
-        ),
-      ),
+      BlocConsumer<AddCourtBloc, AddCourtState>(
+          listener: (BuildContext context, AddCourtState state) {
+        // Check for states
+        if (state is AddCourtErrorState) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        }
+
+        if (state is AddCourtSuccessState) {
+          // Close the modal
+          Navigator.pop(context);
+
+          // Show snackbar
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  "A new ${widget.courtType.toLowerCase()} court has been added!")));
+
+          // Refresh the courts data
+          context
+              .read<MyCourtDetailBloc>()
+              .getCourtsData(courtType: widget.courtType, date: _selectedDate);
+        }
+      }, builder: (BuildContext context, AddCourtState state) {
+        return InkWell(
+          onTap: () {
+            context.read<AddCourtBloc>().addCourt(courtType: widget.courtType);
+          },
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+          child: Row(
+            children: [
+              HeroIcon(
+                HeroIcons.plus,
+                color: ColorSchemes.primary,
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              const Text(
+                "Add New Court",
+                style: TextStyle(fontSize: 14),
+              )
+            ],
+          ),
+        );
+      }),
       InkWell(
         onTap: () {
           _openDeleteModal(context);

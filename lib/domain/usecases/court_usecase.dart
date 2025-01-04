@@ -112,4 +112,18 @@ class CourtUsecase {
 
     return res;
   }
+
+  /// [addCourt] is a method used to add a court.
+  ///
+  /// Parameters:
+  ///   - [courtType] is the type of the court.
+  ///
+  /// Returns a [Future] of [Either] a [Failure] or a [Court] entity.
+  Future<Either<Failure, Court>> addCourt({required String courtType}) async {
+    // Make a POST request to the API.
+    final Either<Failure, CourtDTO> res =
+        await courtRepository.postAddCourt(courtType: courtType);
+
+    return res.fold((l) => Left(l), (r) => Right(Court.fromDTO(r)));
+  }
 }

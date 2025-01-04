@@ -75,7 +75,7 @@ class CourtRepository {
 
     // Call the API to post a new court
     final Either<Failure, http.Response> either = await _apiRepository.post(
-        endpoint: "vendors/me/courts/$courtType", timeoutInSec: 2);
+        endpoint: "vendors/me/courts/$courtType", timeoutInSec: 5);
 
     // Check for failure
     if (either.isLeft()) {
@@ -87,12 +87,12 @@ class CourtRepository {
     final http.Response res = either.getOrElse(() => throw 'No response');
 
     // Parse the response
-    final ResponseDTO<CourtDTO> responseDto = ResponseDTO.fromJson(
-        json: jsonDecode(res.body), fromJsonT: CourtDTO.fromJson);
+    final ResponseDTO<CourtResponseDTO> responseDto = ResponseDTO.fromJson(
+        json: jsonDecode(res.body), fromJsonT: CourtResponseDTO.fromJson);
 
     // Check if the response is successful
     if (responseDto.success) {
-      return Right(responseDto.data!);
+      return Right(responseDto.data!.court);
     }
 
     // Check for status codes
