@@ -6,6 +6,7 @@ import 'package:courtly_vendor/data/dto/booking_dto.dart';
 import 'package:courtly_vendor/data/dto/court_dto.dart';
 import 'package:courtly_vendor/data/dto/create_new_court_form_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
+import 'package:courtly_vendor/data/dto/delete_courts_dto.dart';
 import 'package:courtly_vendor/data/dto/update_court_form_dto.dart';
 import 'package:courtly_vendor/data/repository/api/court_repository.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
@@ -125,5 +126,22 @@ class CourtUsecase {
         await courtRepository.postAddCourt(courtType: courtType);
 
     return res.fold((l) => Left(l), (r) => Right(Court.fromDTO(r)));
+  }
+
+  /// [deleteCourts] is a method used to delete the courts.
+  ///
+  /// Parameters:
+  ///   - [courtIds] is the list of court ids.
+  ///
+  /// Returns a [Future] of [Failure] or null.
+  Future<Failure?> deleteCourts({required List<int> courtIds}) async {
+    // Create the DeleteCourtsDTO
+    final DeleteCourtsDTO deleteCourtsDTO = DeleteCourtsDTO(courtIds: courtIds);
+
+    // Make a DELETE request to the API.
+    final Failure? res =
+        await courtRepository.deleteCourts(dto: deleteCourtsDTO);
+
+    return res;
   }
 }

@@ -2,10 +2,13 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/core/utils/money_formatter.dart';
 import 'package:courtly_vendor/domain/entities/booking.dart';
+import 'package:courtly_vendor/domain/entities/court.dart';
 import 'package:courtly_vendor/presentation/blocs/add_court_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/delete_courts_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_court_detail_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/my_courts_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/add_court_state.dart';
+import 'package:courtly_vendor/presentation/blocs/states/delete_courts_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/my_court_detail_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/update_court_state.dart';
 import 'package:courtly_vendor/presentation/blocs/update_court_bloc.dart';
@@ -40,8 +43,8 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   /// This list is used to store the booked boxes.
   final List<int> _bookedBoxes = [];
 
-  /// [_courtsName] is the list of courts name.
-  late List<String> _courtsName;
+  /// [_courts] is the list of court.
+  late List<Court> _courts;
 
   /// [_moreMenus] is the list of more menus that can be accessed from the app bar.
   late List<Widget> _moreMenus;
@@ -124,7 +127,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
 
     schedules[dateKey] = List.generate(
       _timeSlots.length,
-      (_) => List.generate(_courtsName.length, (_) => false),
+      (_) => List.generate(_courts.length, (_) => false),
     );
   }
 
@@ -136,7 +139,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   ///
   /// Returns an [int] that represents the encoded booking value.
   int _encodeBookingValue(int timeIndex, int courtIndex) {
-    return courtIndex + timeIndex * _courtsName.length;
+    return courtIndex + timeIndex * _courts.length;
   }
 
   /// [_initBookedBoxes] is a function that initializes the booked boxes.
@@ -153,7 +156,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
     for (Booking booking in bookings) {
       _bookedBoxes.add(_encodeBookingValue(
           _timeSlots.indexOf(DateFormat("HH:mm").format(booking.startTime)),
-          _courtsName.indexOf(booking.court.name)));
+          _courts.indexOf(booking.court)));
     }
   }
 
@@ -165,69 +168,101 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   ///
   /// Returns [void]
   void _openDeleteModal(BuildContext context) {
+    /// [selectedLabel] is the selected label index.
+    final ValueNotifier<List<int>> selectedLabel = ValueNotifier([]);
+
     showBottomModalSheet(
         context,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Select Court(s)",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: ColorSchemes.text,
-                    fontWeight: FontWeight.w600)),
-            const SizedBox(
-              height: 14,
-            ),
-            SizedBox(
-              height: 100,
-              child: SingleChildScrollView(
-                  child: Wrap(
-                      spacing: 6,
-                      children: _courtsName
-                          .map((item) => DeleteChip(label: item, onTap: () {}))
-                          .toList())),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SecondaryButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                        side: WidgetStatePropertyAll(BorderSide(
-                            width: 1, color: ColorSchemes.highlight)),
-                        minimumSize:
-                            const WidgetStatePropertyAll(Size.fromHeight(0))),
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                          color: ColorSchemes.highlight,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    )),
-                const SizedBox(
-                  height: 4,
-                ),
-                PrimaryButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStateProperty.all(ColorSchemes.error),
-                        minimumSize:
-                            WidgetStateProperty.all(const Size.fromHeight(0))),
-                    child: const Text("Delete",
+        BlocConsumer<DeleteCourtsBloc, DeleteCourtsState>(
+            listener: (BuildContext context, DeleteCourtsState state) {
+          if (state is DeleteCourtsErrorState) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+
+          if (state is DeleteCourtsSuccessState) {
+            // Close the modal
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+
+            // Show snackbar
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "${selectedLabel.value.length} ${widget.courtType.toLowerCase()} court(s) has been deleted!")));
+
+            // Refresh the courts data
+            context.read<MyCourtDetailBloc>().getCourtsData(
+                courtType: widget.courtType, date: _selectedDate);
+          }
+        }, builder: (BuildContext context, DeleteCourtsState state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Select Court(s)",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: ColorSchemes.text,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(
+                height: 14,
+              ),
+              DeleteChips(
+                  labels: _courts.map((x) => x.name).toList(),
+                  selectedLabel: selectedLabel),
+              const SizedBox(
+                height: 15,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SecondaryButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                          side: WidgetStatePropertyAll(BorderSide(
+                              width: 1, color: ColorSchemes.highlight)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size.fromHeight(0))),
+                      child: Text(
+                        "Cancel",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: ColorSchemes.highlight,
                             fontSize: 14,
-                            fontWeight: FontWeight.w500)))
-              ],
-            )
-          ],
-        ));
+                            fontWeight: FontWeight.w500),
+                      )),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  PrimaryButton(
+                      onPressed: () {
+                        // Check if there is no selected value
+                        if (selectedLabel.value.isEmpty) {
+                          return;
+                        }
+
+                        // Delete courts
+                        context.read<DeleteCourtsBloc>().deleteCourts(
+                            courtIds: selectedLabel.value
+                                .map((x) => _courts[x].id)
+                                .toList());
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStateProperty.all(ColorSchemes.error),
+                          minimumSize: WidgetStateProperty.all(
+                              const Size.fromHeight(0))),
+                      child: Text("Delete",
+                          style: TextStyle(
+                              color: ColorSchemes.primaryBackground,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500)))
+                ],
+              )
+            ],
+          );
+        }));
   }
 
   /// [_openUpdateModal] is a function that opens the update modal.
@@ -506,8 +541,8 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   List<Widget> _getTitleWidget() {
     return [
       _getTitleItemWidget(label: 'Time', width: _timeColumnWidth),
-      ..._courtsName.map(
-          (court) => _getTitleItemWidget(label: court, width: _gridBoxWidth)),
+      ..._courts.map((court) =>
+          _getTitleItemWidget(label: court.name, width: _gridBoxWidth)),
     ];
   }
 
@@ -553,7 +588,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
   /// Returns: [Widget]
   Widget _generateRightHandSideColumnRow(BuildContext context, int timeIndex) {
     return Row(
-      children: List.generate(_courtsName.length, (courtIndex) {
+      children: List.generate(_courts.length, (courtIndex) {
         // Check if the box is booked
         final bool isBooked = _isBooked(courtIndex, timeIndex);
 
@@ -602,7 +637,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
               _generateTimeSlots(state.vendor.openTime, state.vendor.closeTime);
 
           // Initialize courts name
-          _courtsName = state.courts.map((e) => e.name).toList();
+          _courts = state.courts;
 
           _initializeSchedule();
 
@@ -649,7 +684,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
                     Text(
                       "Price: Rp ${moneyFormatter(amount: state.courts[0].price)}/hour",
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: ColorSchemes.highlight,
                         fontSize: 14,
                       ),
                     ),
@@ -737,14 +772,14 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
             Expanded(
                 child: HorizontalDataTable(
               leftHandSideColumnWidth: _timeColumnWidth,
-              rightHandSideColumnWidth: _courtsName.length * _gridBoxWidth,
+              rightHandSideColumnWidth: _courts.length * _gridBoxWidth,
               isFixedHeader: true,
               headerWidgets: _getTitleWidget(),
               leftSideItemBuilder: _generateFirstColumnRow,
               rightSideItemBuilder: _generateRightHandSideColumnRow,
               itemCount: _timeSlots.length,
-              leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-              rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+              leftHandSideColBackgroundColor: ColorSchemes.primaryBackground,
+              rightHandSideColBackgroundColor: ColorSchemes.primaryBackground,
             )),
             const SizedBox(height: PAGE_PADDING_MOBILE)
           ]),

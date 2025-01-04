@@ -9,6 +9,7 @@ import 'package:courtly_vendor/data/dto/court_response_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_response_dto.dart';
 import 'package:courtly_vendor/data/dto/create_new_court_form_dto.dart';
 import 'package:courtly_vendor/data/dto/courts_stats_response_dto.dart';
+import 'package:courtly_vendor/data/dto/delete_courts_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/dto/update_court_form_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
@@ -256,6 +257,49 @@ class CourtRepository {
         endpoint: "vendors/me/courts/$courtType",
         body: formDto.toJson(),
         timeoutInSec: 3);
+
+    // Check for failure
+    if (res.isLeft()) {
+      return res.fold((l) => l, (r) => const UnknownFailure('Unknown error'));
+    }
+
+    // Get the response
+    final http.Response response = res.getOrElse(() => throw 'No response');
+
+    // Parse the response
+    final ResponseDTO responseDto =
+        ResponseDTO.fromJson(json: jsonDecode(response.body));
+
+    // Check if the response is successful
+    if (responseDto.success) {
+      return null;
+    }
+
+    // Check for status codes
+    if (response.statusCode == HttpStatus.internalServerError) {
+      return ServerFailure(responseDto.message);
+    }
+
+    if (response.statusCode == HttpStatus.badRequest) {
+      return RequestFailure(responseDto.message);
+    }
+
+    return UnknownFailure(responseDto.message);
+  }
+
+  /// [deleteCourts] is a method that will be used to delete the courts.
+  ///
+  /// Parameters:
+  ///   - [dto] is the delete courts data transfer object.
+  ///
+  /// Returns [Future] of [Failure].
+  Future<Failure?> deleteCourts({required DeleteCourtsDTO dto}) async {
+    // Set the token from the storage
+    await _apiRepository.setTokenFromStorage(tokenRepository: _tokenRepository);
+
+    // Call the API to delete the courts
+    final Either<Failure, http.Response> res = await _apiRepository.delete(
+        endpoint: "vendors/me/courts", body: dto.toJson(), timeoutInSec: 3);
 
     // Check for failure
     if (res.isLeft()) {

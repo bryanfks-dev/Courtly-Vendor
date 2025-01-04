@@ -21,6 +21,7 @@ import 'package:courtly_vendor/presentation/blocs/add_court_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/change_password_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/create_new_court_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/delete_courts_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
 import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
@@ -44,7 +45,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// [main] is the entry point of the application.
 /// This function runs the application.
 ///
-/// - Returns: void
+/// Returns: void
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -123,6 +124,10 @@ class _MyApp extends State<MyApp> {
                     CourtUsecase(courtRepository: CourtRepository()))),
         BlocProvider(
             create: (BuildContext context) => CreateNewCourtBloc(
+                courtUsecase:
+                    CourtUsecase(courtRepository: CourtRepository()))),
+        BlocProvider(
+            create: (BuildContext context) => DeleteCourtsBloc(
                 courtUsecase:
                     CourtUsecase(courtRepository: CourtRepository()))),
         BlocProvider(
