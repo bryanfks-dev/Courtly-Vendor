@@ -3,12 +3,12 @@ import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/domain/entities/vendor.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
-import 'package:courtly_vendor/presentation/blocs/events/vendor_event.dart';
+import 'package:courtly_vendor/presentation/blocs/events/profile_event.dart';
 import 'package:courtly_vendor/presentation/blocs/logout_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/logout_state.dart';
-import 'package:courtly_vendor/presentation/blocs/states/vendor_state.dart';
-import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
+import 'package:courtly_vendor/presentation/blocs/states/profile_state.dart';
+import 'package:courtly_vendor/presentation/blocs/profile_bloc.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
@@ -135,25 +135,25 @@ class _VendorProfilePage extends State<VendorProfilePage> {
     super.initState();
 
     // Check if the vendor data is not loaded
-    if (context.read<VendorBloc>().state is! VendorLoadedState) {
+    if (context.read<ProfileBloc>().state is! ProfileLoadedState) {
       // Fetch the vendor data
-      context.read<VendorBloc>().add(FetchVendorEvent());
+      context.read<ProfileBloc>().add(FetchProfileEvent());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<VendorBloc, VendorState>(
-      listener: (BuildContext context, VendorState state) {
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      listener: (BuildContext context, ProfileState state) {
         // Handle the states
-        if (state is VendorErrorState) {
+        if (state is ProfileErrorState) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.errorMessage)));
         }
       },
-      builder: (BuildContext context, VendorState state) {
+      builder: (BuildContext context, ProfileState state) {
         // Check the states
-        if (state is! VendorLoadedState) {
+        if (state is! ProfileLoadedState) {
           return const LoadingScreen();
         }
 
@@ -167,7 +167,7 @@ class _VendorProfilePage extends State<VendorProfilePage> {
         return SafeArea(
           child: RefreshIndicator(
               onRefresh: () async {
-                context.read<VendorBloc>().add(FetchVendorEvent());
+                context.read<ProfileBloc>().add(FetchProfileEvent());
               },
               child: SingleChildScrollView(
                 child: Column(
