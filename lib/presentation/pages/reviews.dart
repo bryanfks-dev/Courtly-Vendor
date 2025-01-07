@@ -1,5 +1,6 @@
 import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
+import 'package:courtly_vendor/core/utils/get_digits.dart';
 import 'package:courtly_vendor/presentation/blocs/reviews_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/reviews_state.dart';
 import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
@@ -53,6 +54,32 @@ class _ReviewsPage extends State<ReviewsPage> {
     }
 
     return starCount / reviewsTotal;
+  }
+
+  /// [_formatTotalReviews] is a method to format the total reviews.
+  ///
+  /// Parameters:
+  ///   - [totalReviews] is the total reviews.
+  ///
+  /// Returns a [String] of the formatted total reviews.
+  String _formatTotalReviews(int totalReviews) {
+    // Get the digits of the total reviews.
+    final int digits = getDigits(number: totalReviews);
+
+    // Return the formatted total reviews.
+    if (digits <= 2) {
+      return totalReviews.toString();
+    }
+
+    if (digits == 3) {
+      return "${totalReviews ~/ 100}00+";
+    }
+
+    if (digits <= 5) {
+      return "${totalReviews ~/ 1000}k+";
+    }
+
+    return "${totalReviews ~/ 1000000}M+";
   }
 
   @override
@@ -130,7 +157,7 @@ class _ReviewsPage extends State<ReviewsPage> {
                           TextSpan(text: "Based on\n", children: [
                             TextSpan(
                                 text:
-                                    "${state.reviewsStats.reviewsTotal} reviews",
+                                    "${_formatTotalReviews(state.reviewsStats.reviewsTotal)} reviews",
                                 style: TextStyle(
                                     color: ColorSchemes.highlight,
                                     fontWeight: FontWeight.normal,

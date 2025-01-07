@@ -45,7 +45,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// [main] is the entry point of the application.
 /// This function runs the application.
 ///
-/// Returns: void
+/// Returns void
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
