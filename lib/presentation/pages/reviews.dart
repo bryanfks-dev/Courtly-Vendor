@@ -106,171 +106,189 @@ class _ReviewsPage extends State<ReviewsPage> {
       }
 
       return SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(
-                bottom: 20,
-                left: PAGE_PADDING_MOBILE,
-                right: PAGE_PADDING_MOBILE,
-              ),
-              color: ColorSchemes.primaryBackground,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+          child: RefreshIndicator(
+              onRefresh: () async {
+                await context.read<ReviewsBloc>().getReviews();
+              },
+              color: ColorSchemes.primary,
+              backgroundColor: ColorSchemes.primaryBackground,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(
+                        bottom: 20,
+                        left: PAGE_PADDING_MOBILE,
+                        right: PAGE_PADDING_MOBILE,
+                      ),
+                      color: ColorSchemes.primaryBackground,
+                      child: Column(
                         children: [
-                          HeroIcon(HeroIcons.star,
-                              style: HeroIconStyle.solid,
-                              size: 36,
-                              color: ColorSchemes.star),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text.rich(
-                              style: TextStyle(
-                                  color: ColorSchemes.text,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold),
-                              TextSpan(
-                                  text:
-                                      state.reviewsStats.totalRating.toString(),
-                                  children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  HeroIcon(HeroIcons.star,
+                                      style: HeroIconStyle.solid,
+                                      size: 36,
+                                      color: ColorSchemes.star),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text.rich(
+                                      style: TextStyle(
+                                          color: ColorSchemes.text,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold),
+                                      TextSpan(
+                                          text: state.reviewsStats.totalRating
+                                              .toString(),
+                                          children: [
+                                            TextSpan(
+                                                text: " / 5.0",
+                                                style: TextStyle(
+                                                    color:
+                                                        ColorSchemes.highlight,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontSize: 12))
+                                          ]))
+                                ],
+                              ),
+                              Text.rich(
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      color: ColorSchemes.text,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14),
+                                  TextSpan(text: "Based on\n", children: [
                                     TextSpan(
-                                        text: " / 5.0",
+                                        text:
+                                            "${_formatTotalReviews(state.reviewsStats.reviewsTotal)} reviews",
                                         style: TextStyle(
                                             color: ColorSchemes.highlight,
                                             fontWeight: FontWeight.normal,
                                             fontSize: 12))
                                   ]))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Column(
+                            children: [
+                              RatingBar(
+                                  rating: 1,
+                                  value: _calculateStarRating(
+                                      starCount: state
+                                          .reviewsStats.reviewStars.oneStar,
+                                      reviewsTotal:
+                                          state.reviewsStats.reviewsTotal)),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              RatingBar(
+                                  rating: 2,
+                                  value: _calculateStarRating(
+                                      starCount: state
+                                          .reviewsStats.reviewStars.twoStar,
+                                      reviewsTotal:
+                                          state.reviewsStats.reviewsTotal)),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              RatingBar(
+                                  rating: 3,
+                                  value: _calculateStarRating(
+                                      starCount: state
+                                          .reviewsStats.reviewStars.threeStar,
+                                      reviewsTotal:
+                                          state.reviewsStats.reviewsTotal)),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              RatingBar(
+                                  rating: 4,
+                                  value: _calculateStarRating(
+                                      starCount: state
+                                          .reviewsStats.reviewStars.fourStar,
+                                      reviewsTotal:
+                                          state.reviewsStats.reviewsTotal)),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              RatingBar(
+                                  rating: 5,
+                                  value: _calculateStarRating(
+                                      starCount: state
+                                          .reviewsStats.reviewStars.fiveStar,
+                                      reviewsTotal:
+                                          state.reviewsStats.reviewsTotal))
+                            ],
+                          )
                         ],
                       ),
-                      Text.rich(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: ColorSchemes.text,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14),
-                          TextSpan(text: "Based on\n", children: [
-                            TextSpan(
-                                text:
-                                    "${_formatTotalReviews(state.reviewsStats.reviewsTotal)} reviews",
-                                style: TextStyle(
-                                    color: ColorSchemes.highlight,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 12))
-                          ]))
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    children: [
-                      RatingBar(
-                          rating: 1,
-                          value: _calculateStarRating(
-                              starCount: state.reviewsStats.reviewStars.oneStar,
-                              reviewsTotal: state.reviewsStats.reviewsTotal)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      RatingBar(
-                          rating: 2,
-                          value: _calculateStarRating(
-                              starCount: state.reviewsStats.reviewStars.twoStar,
-                              reviewsTotal: state.reviewsStats.reviewsTotal)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      RatingBar(
-                          rating: 3,
-                          value: _calculateStarRating(
-                              starCount:
-                                  state.reviewsStats.reviewStars.threeStar,
-                              reviewsTotal: state.reviewsStats.reviewsTotal)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      RatingBar(
-                          rating: 4,
-                          value: _calculateStarRating(
-                              starCount:
-                                  state.reviewsStats.reviewStars.fourStar,
-                              reviewsTotal: state.reviewsStats.reviewsTotal)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      RatingBar(
-                          rating: 5,
-                          value: _calculateStarRating(
-                              starCount:
-                                  state.reviewsStats.reviewStars.fiveStar,
-                              reviewsTotal: state.reviewsStats.reviewsTotal))
-                    ],
-                  )
-                ],
-              ),
-            ),
-            StickyHeader(
-                header: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                      color: ColorSchemes.primaryBackground,
-                      border: Border(
-                          top: BorderSide(width: 1, color: ColorSchemes.subtle),
-                          bottom: BorderSide(
-                              width: 1, color: ColorSchemes.subtle))),
-                  child: Container(
-                    margin: const EdgeInsets.only(left: PAGE_PADDING_MOBILE),
-                    child: FilterChips(
-                      items: _chipLabelItems,
-                      selectedItem: _selectedChipNotifier,
-                      onSelected: () {
-                        context.read<ReviewsBloc>().getReviews(
-                            rating: _selectedChipNotifier.value == 0
-                                ? null
-                                : _selectedChipNotifier.value);
-                      },
                     ),
-                  ),
+                    StickyHeader(
+                        header: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                              color: ColorSchemes.primaryBackground,
+                              border: Border(
+                                  top: BorderSide(
+                                      width: 1, color: ColorSchemes.subtle),
+                                  bottom: BorderSide(
+                                      width: 1, color: ColorSchemes.subtle))),
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: PAGE_PADDING_MOBILE),
+                            child: FilterChips(
+                              items: _chipLabelItems,
+                              selectedItem: _selectedChipNotifier,
+                              onSelected: () {
+                                context.read<ReviewsBloc>().getReviews(
+                                    rating: _selectedChipNotifier.value == 0
+                                        ? null
+                                        : _selectedChipNotifier.value);
+                              },
+                            ),
+                          ),
+                        ),
+                        content: BlocBuilder<ReviewsBloc, ReviewsState>(
+                          builder: (BuildContext context, ReviewsState state) {
+                            // Show loading screen if the state is not ReviewsLoadedState.
+                            if (state is! ReviewsLoadedState) {
+                              return const LoadingScreen();
+                            }
+
+                            // Show no reviews found if there is no reviews.
+                            if (state.reviewsStats.reviews.isEmpty) {
+                              return Container(
+                                  padding: const EdgeInsets.only(top: 56),
+                                  child: Center(
+                                      child: Text("No reviews found.",
+                                          style: TextStyle(
+                                              color: ColorSchemes.highlight))));
+                            }
+
+                            return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ReviewCard(
+                                    review: state.reviewsStats.reviews[index],
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        const SizedBox(height: 10),
+                                itemCount: state.reviewsStats.reviews.length);
+                          },
+                        ))
+                  ],
                 ),
-                content: BlocBuilder<ReviewsBloc, ReviewsState>(
-                  builder: (BuildContext context, ReviewsState state) {
-                    // Show loading screen if the state is not ReviewsLoadedState.
-                    if (state is! ReviewsLoadedState) {
-                      return const LoadingScreen();
-                    }
-
-                    // Show no reviews found if there is no reviews.
-                    if (state.reviewsStats.reviews.isEmpty) {
-                      return Container(
-                          padding: const EdgeInsets.only(top: 56),
-                          child: Center(
-                              child: Text("No reviews found.",
-                                  style: TextStyle(
-                                      color: ColorSchemes.highlight))));
-                    }
-
-                    return ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return ReviewCard(
-                            review: state.reviewsStats.reviews[index],
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const SizedBox(height: 10),
-                        itemCount: state.reviewsStats.reviews.length);
-                  },
-                ))
-          ],
-        ),
-      ));
+              )));
     });
   }
 }

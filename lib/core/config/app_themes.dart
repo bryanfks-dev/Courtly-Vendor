@@ -39,6 +39,9 @@ class AppThemes {
           circularTrackColor: ColorSchemes.subtle),
       bottomSheetTheme:
           BottomSheetThemeData(backgroundColor: ColorSchemes.primaryBackground),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: ColorSchemes.primary,
+      ),
       inputDecorationTheme: InputDecorationTheme(
           prefixIconColor: ColorSchemes.highlight,
           suffixIconColor: ColorSchemes.highlight,
@@ -65,8 +68,6 @@ class AppThemes {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: ColorSchemes.error),
           )),
-      textSelectionTheme:
-          TextSelectionThemeData(cursorColor: ColorSchemes.primary),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         iconColor: WidgetStatePropertyAll(ColorSchemes.highlight),

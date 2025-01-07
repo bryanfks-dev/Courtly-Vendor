@@ -34,10 +34,10 @@ class _VendorProfilePage extends State<VendorProfilePage> {
   /// [openLogoutModal] is the function to open the logout modal.
   /// This function will open the modal to confirm the logout action.
   ///
-  /// - Parameters:
-  ///   - context
+  /// Parameters:
+  ///   - [context] is the build context.
   ///
-  /// - Returns: void.
+  /// Returns [void].
   void openLogoutModal(BuildContext context) {
     /// [logoutController] is the logout controller.
     final LogoutBloc logoutController = context.read<LogoutBloc>();
@@ -165,103 +165,110 @@ class _VendorProfilePage extends State<VendorProfilePage> {
         DateFormat dateFormatter = DateFormat("HH:mm");
 
         return SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                      left: PAGE_PADDING_MOBILE,
-                      right: PAGE_PADDING_MOBILE,
-                      bottom: 20),
-                  decoration:
-                      BoxDecoration(color: ColorSchemes.primaryBackground),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        vendor.name,
-                        style: TextStyle(
-                            color: ColorSchemes.text,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18),
-                      ),
-                      const SizedBox(height: 15),
-                      Column(
+          child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<VendorBloc>().add(FetchVendorEvent());
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(
+                          left: PAGE_PADDING_MOBILE,
+                          right: PAGE_PADDING_MOBILE,
+                          bottom: 20),
+                      decoration:
+                          BoxDecoration(color: ColorSchemes.primaryBackground),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Address",
+                            vendor.name,
                             style: TextStyle(
-                                color: ColorSchemes.primary,
+                                color: ColorSchemes.text,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 12),
+                                fontSize: 18),
                           ),
-                          const SizedBox(height: 3),
-                          Text(vendor.address,
-                              style: TextStyle(
-                                  color: ColorSchemes.text, fontSize: 14))
+                          const SizedBox(height: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Address",
+                                style: TextStyle(
+                                    color: ColorSchemes.primary,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(vendor.address,
+                                  style: TextStyle(
+                                      color: ColorSchemes.text, fontSize: 14))
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Operational Hours",
+                                style: TextStyle(
+                                    color: ColorSchemes.primary,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                  "${dateFormatter.format(vendor.openTime)} - ${dateFormatter.format(vendor.closeTime)}",
+                                  style: TextStyle(
+                                      color: ColorSchemes.text, fontSize: 14))
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          InkWell(
+                              overlayColor: const WidgetStatePropertyAll(
+                                  Colors.transparent),
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.myCourts);
+                              },
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("View Your Courts",
+                                        style: TextStyle(
+                                            color: ColorSchemes.text,
+                                            fontSize: 14)),
+                                    HeroIcon(
+                                      HeroIcons.chevronRight,
+                                      size: 18,
+                                      color: ColorSchemes.highlight,
+                                    )
+                                  ]))
                         ],
                       ),
-                      const SizedBox(height: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Operational Hours",
-                            style: TextStyle(
-                                color: ColorSchemes.primary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                              "${dateFormatter.format(vendor.openTime)} - ${dateFormatter.format(vendor.closeTime)}",
-                              style: TextStyle(
-                                  color: ColorSchemes.text, fontSize: 14))
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      InkWell(
-                          overlayColor:
-                              const WidgetStatePropertyAll(Colors.transparent),
+                    ),
+                    const SizedBox(height: 10),
+                    ProfileMenuCard(title: "Account Settings", menus: [
+                      ProfileMenu(
+                          iconData: HeroIcons.lockClosed,
+                          title: "Change Password",
                           onTap: () {
-                            Navigator.of(context).pushNamed(Routes.myCourts);
-                          },
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("View Your Courts",
-                                    style: TextStyle(
-                                        color: ColorSchemes.text,
-                                        fontSize: 14)),
-                                HeroIcon(
-                                  HeroIcons.chevronRight,
-                                  size: 18,
-                                  color: ColorSchemes.highlight,
-                                )
-                              ]))
-                    ],
-                  ),
+                            Navigator.of(context)
+                                .pushNamed(Routes.changePassword);
+                          }),
+                    ]),
+                    const SizedBox(height: 10),
+                    ProfileMenu(
+                        iconData: HeroIcons.arrowRightOnRectangle,
+                        title: "Log Out",
+                        onTap: () {
+                          openLogoutModal(context);
+                        })
+                  ],
                 ),
-                const SizedBox(height: 10),
-                ProfileMenuCard(title: "Account Settings", menus: [
-                  ProfileMenu(
-                      iconData: HeroIcons.lockClosed,
-                      title: "Change Password",
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Routes.changePassword);
-                      }),
-                ]),
-                const SizedBox(height: 10),
-                ProfileMenu(
-                    iconData: HeroIcons.arrowRightOnRectangle,
-                    title: "Log Out",
-                    onTap: () {
-                      openLogoutModal(context);
-                    })
-              ],
-            ),
-          ),
+              )),
         );
       },
     );
