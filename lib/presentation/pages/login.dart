@@ -2,9 +2,11 @@ import 'package:courtly_vendor/core/constants/color_schemes.dart';
 import 'package:courtly_vendor/core/constants/constants.dart';
 import 'package:courtly_vendor/presentation/blocs/auth_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/events/auth_event.dart';
+import 'package:courtly_vendor/presentation/blocs/events/vendor_event.dart';
 import 'package:courtly_vendor/presentation/blocs/login_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/auth_state.dart';
 import 'package:courtly_vendor/presentation/blocs/states/login_state.dart';
+import 'package:courtly_vendor/presentation/blocs/vendor_bloc.dart';
 import 'package:courtly_vendor/presentation/validators/login_form_validator.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
@@ -70,7 +72,11 @@ class LoginPage extends StatelessWidget {
 
             // Check if the login is successful.
             if (loginState is LoginSuccessState) {
+              // Dispatch the check auth event.
               context.read<AuthBloc>().add(CheckAuthEvent());
+
+              // Dispatch the fetch vendor event.
+              context.read<VendorBloc>().add(FetchVendorEvent());
             }
           },
           builder: (BuildContext context, LoginState state) => Scaffold(
