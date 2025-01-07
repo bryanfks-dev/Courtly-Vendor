@@ -156,7 +156,7 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
     for (Booking booking in bookings) {
       _bookedBoxes.add(_encodeBookingValue(
           _timeSlots.indexOf(DateFormat("HH:mm").format(booking.startTime)),
-          _courts.indexOf(booking.court)));
+          _courts.indexWhere((court) => court.id == booking.court.id)));
     }
   }
 
