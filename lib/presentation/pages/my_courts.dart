@@ -6,6 +6,7 @@ import 'package:courtly_vendor/presentation/blocs/states/my_courts_state.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/my_courts/court_card.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
@@ -45,7 +46,13 @@ class _MyCourtsPage extends State<MyCourtsPage> {
           body: SafeArea(
             child: BlocBuilder<MyCourtsBloc, MyCourtsState>(
                 builder: (BuildContext context, MyCourtsState state) {
-              // Check if the state is not loaded
+              // Check for states
+              if (state is MyCourtsErrorState) {
+                return TryAgainScreen(
+                    onTryAgain: () =>
+                        context.read<MyCourtsBloc>().getCourtsStats());
+              }
+
               if (state is! MyCourtsLoadedState) {
                 return const LoadingScreen();
               }

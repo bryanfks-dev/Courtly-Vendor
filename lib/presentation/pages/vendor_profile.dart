@@ -13,6 +13,7 @@ import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu.dart';
 import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu_card.dart';
 import 'package:courtly_vendor/routes/routes.dart';
@@ -153,6 +154,12 @@ class _VendorProfilePage extends State<VendorProfilePage> {
       },
       builder: (BuildContext context, ProfileState state) {
         // Check the states
+        if (state is ProfileErrorState) {
+          return TryAgainScreen(
+              onTryAgain: () =>
+                  context.read<ProfileBloc>().add(FetchProfileEvent()));
+        }
+
         if (state is! ProfileLoadedState) {
           return const LoadingScreen();
         }

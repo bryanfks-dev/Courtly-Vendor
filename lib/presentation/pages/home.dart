@@ -4,6 +4,7 @@ import 'package:courtly_vendor/presentation/blocs/home_bloc.dart';
 import 'package:courtly_vendor/presentation/blocs/states/home_state.dart';
 import 'package:courtly_vendor/presentation/widgets/home/recent_order_card.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
@@ -42,6 +43,11 @@ class _HomePage extends State<HomePage> {
         }
       }, builder: (BuildContext context, HomeState state) {
         // Check for the home state
+        if (state is HomeErrorState) {
+          return TryAgainScreen(
+              onTryAgain: () => context.read<HomeBloc>().getOrdersStats());
+        }
+
         if (state is! HomeLoadedState) {
           return const LoadingScreen();
         }

@@ -7,6 +7,7 @@ import 'package:courtly_vendor/presentation/blocs/states/orders_state.dart';
 import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/orders/order_card.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
@@ -47,7 +48,12 @@ class _OrdersPage extends State<OrdersPage> {
             .showSnackBar(SnackBar(content: Text(state.errorMessage)));
       }
     }, builder: (BuildContext context, OrdersState state) {
-      // Show loading screen if the state is not OrderLoadedState.
+      // Check for states
+      if (state is OrdersErrorState) {
+        return TryAgainScreen(
+            onTryAgain: () => context.read<OrdersBloc>().getOrders());
+      }
+
       if (state is! OrdersLoadedState) {
         return const LoadingScreen();
       }

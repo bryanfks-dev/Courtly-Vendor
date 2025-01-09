@@ -7,6 +7,7 @@ import 'package:courtly_vendor/presentation/widgets/filter_chips.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/reviews/rating_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/reviews/review_card.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
@@ -100,7 +101,12 @@ class _ReviewsPage extends State<ReviewsPage> {
             .showSnackBar(SnackBar(content: Text(state.errorMessage)));
       }
     }, builder: (BuildContext context, ReviewsState state) {
-      // Show loading screen if the state is not ReviewsLoadedState.
+      // Check for states
+      if (state is ReviewsErrorState) {
+        return TryAgainScreen(
+            onTryAgain: () => context.read<ReviewsBloc>().getReviews());
+      }
+
       if (state is! ReviewsLoadedState) {
         return const LoadingScreen();
       }

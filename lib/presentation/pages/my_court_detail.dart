@@ -20,6 +20,7 @@ import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/my_court_detail/delete_chip.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
+import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
@@ -655,7 +656,13 @@ class _CourtDetailPage extends State<MyCourtDetailPage> {
           }
         }
       }, builder: (BuildContext context, MyCourtDetailState state) {
-        // Check for states and court counts
+        // Check for states
+        if (state is MyCourtDetailErrorState) {
+          return TryAgainScreen(
+              onTryAgain: () => context.read<MyCourtDetailBloc>().getCourtsData(
+                  courtType: widget.courtType, date: _selectedDate));
+        }
+
         if (state is! MyCourtDetailLoadedState || state.courts.isEmpty) {
           return const LoadingScreen();
         }
