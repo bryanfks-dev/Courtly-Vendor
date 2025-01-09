@@ -7,6 +7,7 @@ import 'package:courtly_vendor/presentation/blocs/states/create_new_court_state.
 import 'package:courtly_vendor/presentation/pages/my_court_detail.dart';
 import 'package:courtly_vendor/presentation/validators/create_new_court_form_validator.dart';
 import 'package:courtly_vendor/presentation/widgets/backable_centered_app_bar.dart';
+import 'package:courtly_vendor/presentation/widgets/bottom_modal_sheet.dart';
 import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
   };
 
   /// [_image] is the image xfile.
-  XFile? _image;
+  File? _image;
 
   /// [_pickImage] is a Future function that picks an image from the device.
   ///
@@ -53,6 +54,116 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
 
     // Pick an image from gallery
     return await picker.pickImage(source: ImageSource.gallery);
+  }
+
+  /// [_captureImage] is a Future function that captures an image from the device.
+  ///
+  /// Returns [Future] of [XFile]
+  Future<XFile?> _captureImage() async {
+    // Create an image picker
+    final ImagePicker picker = ImagePicker();
+
+    // Pick an image from camera
+    return await picker.pickImage(source: ImageSource.camera);
+  }
+
+  /// [_openUploadImageMenus] is a function that opens the upload image menus.
+  ///
+  /// Parameters:
+  ///   - [context]: The [BuildContext] of the widget.
+  ///
+  /// Returns [void]
+  void _openUploadImageMenus(BuildContext context) {
+    // Create a temp variable to store the image
+    XFile? res;
+
+    /// [closeMenu] is a function that closes the menu.
+    ///
+    /// Returns [void]
+    void closeMenu() {
+      Navigator.pop(context);
+    }
+
+    showBottomModalSheet(
+        context,
+        Column(
+          children: [
+            InkWell(
+              onTap: () async {
+                // Capture an image
+                res = await _captureImage();
+
+                // Check if the image is null
+                if (res == null) {
+                  return;
+                }
+
+                // Set the image
+                setState(() {
+                  _image = File(res!.path);
+                });
+
+                closeMenu();
+              },
+              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+              child: Row(
+                children: [
+                  HeroIcon(
+                    HeroIcons.camera,
+                    color: ColorSchemes.primary,
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  const Text(
+                    "Take a Photo",
+                    style: TextStyle(fontSize: 14),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+            Divider(
+              thickness: 1,
+              color: ColorSchemes.subtle,
+            ),
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: () async {
+                // Pick an image
+                res = await _pickImage();
+
+                // Check if the image is null
+                if (res == null) {
+                  return;
+                }
+
+                // Set the image
+                setState(() {
+                  _image = File(res!.path);
+                });
+
+                closeMenu();
+              },
+              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+              child: Row(
+                children: [
+                  HeroIcon(
+                    HeroIcons.photo,
+                    color: ColorSchemes.primary,
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  const Text(
+                    "Choose from Gallery",
+                    style: TextStyle(fontSize: 14),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 
   /// [_validateAddNewCourtForm] is a function that validates the Add New Court Form.
@@ -169,17 +280,7 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              // Pick an image
-                              final XFile? tempRes = await _pickImage();
-
-                              // Check if the image is null
-                              if (tempRes == null) {
-                                return;
-                              }
-
-                              setState(() {
-                                _image = tempRes;
-                              });
+                              _openUploadImageMenus(context);
                             },
                             overlayColor: const WidgetStatePropertyAll(
                                 Colors.transparent),
@@ -198,7 +299,7 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
                                       padding: const EdgeInsets.all(
                                           PAGE_PADDING_MOBILE),
                                       child: Image.file(
-                                        File(_image!.path),
+                                        _image!,
                                         fit: BoxFit.contain,
                                       ),
                                     )
@@ -247,7 +348,7 @@ class _CreateNewCourtPage extends State<CreateNewCourtPage> {
                         context.read<CreateNewCourtBloc>().createNewCourt(
                             pricePerHour: double.parse(
                                 _textInputControllers["pricePerHour"]!.text),
-                            imageFile: File(_image!.path),
+                            imageFile: _image!,
                             courtType: widget.courtType);
                       },
                       style: const ButtonStyle(

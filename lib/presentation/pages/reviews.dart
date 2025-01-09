@@ -267,7 +267,7 @@ class _ReviewsPage extends State<ReviewsPage> {
                               return Container(
                                   padding: const EdgeInsets.only(top: 56),
                                   child: Center(
-                                      child: Text("No reviews found.",
+                                      child: Text("No reviews found",
                                           style: TextStyle(
                                               color: ColorSchemes.highlight))));
                             }

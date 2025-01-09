@@ -1,4 +1,4 @@
-import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 /// [CreateNewCourtFormValidator] is a class that validates the Add New Court form.
 /// It checks if the price per hour and courts image are valid or not.
@@ -34,7 +34,7 @@ class CreateNewCourtFormValidator {
   ///   - [image]: The image to validate.
   ///
   /// Returns a [String] message.
-  String? validateCourtImage({required XFile? image}) {
+  String? validateCourtImage({required File? image}) {
     // Check if the image is empty.
     if (image == null) {
       return "Court image is required";

@@ -170,16 +170,27 @@ class _HomePage extends State<HomePage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return RecentOrderCard(
-                                order: state.ordersStats.recentOrders[index]);
-                          },
-                          separatorBuilder: (BuildContext context, _) =>
-                              const SizedBox(height: 10),
-                          itemCount: state.ordersStats.recentOrders.length),
+                      state.ordersStats.recentOrders.isNotEmpty
+                          ? ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (BuildContext context, int index) {
+                                return RecentOrderCard(
+                                    order:
+                                        state.ordersStats.recentOrders[index]);
+                              },
+                              separatorBuilder: (BuildContext context, _) =>
+                                  const SizedBox(height: 10),
+                              itemCount: state.ordersStats.recentOrders.length)
+                          : Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Center(
+                                child: Text("No recent orders",
+                                    style: TextStyle(
+                                        color: ColorSchemes.highlight,
+                                        fontSize: 14)),
+                              ),
+                            ),
                       const SizedBox(height: PAGE_PADDING_MOBILE),
                     ],
                   ),
