@@ -55,12 +55,19 @@ class OrderCard extends StatelessWidget {
             ),
             Text("${order.courtType} Court",
                 style: TextStyle(color: ColorSchemes.text, fontSize: 12)),
-            const SizedBox(height: 10),
-            Text("Rp ${moneyFormatter(amount: order.price)}",
-                style: TextStyle(
-                    color: ColorSchemes.text,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12)),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("+${order.user.phoneNumber}",
+                    style: TextStyle(color: ColorSchemes.text, fontSize: 12)),
+                Text("Rp ${moneyFormatter(amount: order.price)}",
+                    style: TextStyle(
+                        color: ColorSchemes.primary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12))
+              ],
+            ),
           ],
         ),
       ),

@@ -6,12 +6,16 @@ class UserDTO {
   /// [username] is the username of the user.
   final String username;
 
+  /// [phoneNumber] is the phone number of the user.
+  final String phoneNumber;
+
   /// [profilePictureUrl] is the URL of the user's profile picture.
   final String? profilePictureUrl;
 
   UserDTO({
     required this.id,
     required this.username,
+    required this.phoneNumber,
     required this.profilePictureUrl,
   });
 
@@ -25,6 +29,7 @@ class UserDTO {
     return UserDTO(
       id: json['id'],
       username: json['username'],
+      phoneNumber: json['phone_number'],
       profilePictureUrl: json['profile_picture_url'],
     );
   }
