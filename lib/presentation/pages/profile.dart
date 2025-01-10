@@ -32,14 +32,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  /// [openLogoutModal] is the function to open the logout modal.
+  /// [_openLogoutModal] is the function to open the logout modal.
   /// This function will open the modal to confirm the logout action.
   ///
   /// Parameters:
   ///   - [context] is the build context.
   ///
   /// Returns [void].
-  void openLogoutModal(BuildContext context) {
+  void _openLogoutModal(BuildContext context) {
     /// [logoutController] is the logout controller.
     final LogoutBloc logoutController = context.read<LogoutBloc>();
 
@@ -271,7 +271,7 @@ class _ProfilePage extends State<ProfilePage> {
                         iconData: HeroIcons.arrowRightOnRectangle,
                         title: "Log Out",
                         onTap: () {
-                          openLogoutModal(context);
+                          _openLogoutModal(context);
                         })
                   ],
                 ),
