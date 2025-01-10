@@ -13,7 +13,7 @@ import 'package:courtly_vendor/data/dto/delete_courts_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/dto/update_court_form_dto.dart';
 import 'package:courtly_vendor/data/repository/api/api_repository.dart';
-import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
+import 'package:courtly_vendor/data/repository/local/token_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 

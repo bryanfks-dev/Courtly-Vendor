@@ -5,7 +5,7 @@ import 'package:courtly_vendor/data/dto/login_form_dto.dart';
 import 'package:courtly_vendor/data/dto/login_response_dto.dart';
 import 'package:courtly_vendor/data/dto/response_dto.dart';
 import 'package:courtly_vendor/data/repository/api/login_repository.dart';
-import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
+import 'package:courtly_vendor/data/repository/local/token_repository.dart';
 import 'package:dartz/dartz.dart';
 
 /// [LoginUsecase] is a class to handle login usecase.

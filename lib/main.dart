@@ -7,7 +7,7 @@ import 'package:courtly_vendor/data/repository/api/order_repository.dart';
 import 'package:courtly_vendor/data/repository/api/review_repository.dart';
 import 'package:courtly_vendor/data/repository/api/vendor_repository.dart';
 import 'package:courtly_vendor/data/repository/api/verify_password_repository.dart';
-import 'package:courtly_vendor/data/repository/storage/token_repository.dart';
+import 'package:courtly_vendor/data/repository/local/token_repository.dart';
 import 'package:courtly_vendor/domain/usecases/auth_usecase.dart';
 import 'package:courtly_vendor/domain/usecases/change_password_usecase.dart';
 import 'package:courtly_vendor/domain/usecases/court_usecase.dart';
