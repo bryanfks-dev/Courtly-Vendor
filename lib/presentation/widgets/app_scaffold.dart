@@ -3,7 +3,7 @@ import 'package:courtly_vendor/domain/props/page_props.dart';
 import 'package:courtly_vendor/presentation/pages/home.dart';
 import 'package:courtly_vendor/presentation/pages/orders.dart';
 import 'package:courtly_vendor/presentation/pages/reviews.dart';
-import 'package:courtly_vendor/presentation/pages/vendor_profile.dart';
+import 'package:courtly_vendor/presentation/pages/profile.dart';
 import 'package:courtly_vendor/presentation/widgets/bottom_navbar.dart';
 import 'package:courtly_vendor/presentation/widgets/centered_app_bar.dart';
 import 'package:courtly_vendor/presentation/widgets/default_app_bar.dart';
@@ -75,12 +75,12 @@ class _AppScaffold extends State<AppScaffold> {
           label: "Reviews",
           backgroundColor: ColorSchemes.secondaryBackground),
       PageProps(
-          appBar: const CenteredAppBar(title: "Vendor Profile"),
-          body: const VendorProfilePage(),
+          appBar: const CenteredAppBar(title: "Profile"),
+          body: const ProfilePage(),
           icon: const HeroIcon(HeroIcons.briefcase),
           selectedIcon:
               const HeroIcon(HeroIcons.briefcase, style: HeroIconStyle.solid),
-          label: "Vendor Profile",
+          label: "Profile",
           backgroundColor: ColorSchemes.secondaryBackground)
     ];
   }

@@ -14,24 +14,24 @@ import 'package:courtly_vendor/presentation/widgets/loading_screen.dart';
 import 'package:courtly_vendor/presentation/widgets/primary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/secondary_button.dart';
 import 'package:courtly_vendor/presentation/widgets/try_again_screen.dart';
-import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu.dart';
-import 'package:courtly_vendor/presentation/widgets/vendor_profile/profile_menu_card.dart';
+import 'package:courtly_vendor/presentation/widgets/profile/profile_menu.dart';
+import 'package:courtly_vendor/presentation/widgets/profile/profile_menu_card.dart';
 import 'package:courtly_vendor/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:intl/intl.dart';
 
-/// [VendorProfilePage] is the page to display the vendor profile.
+/// [ProfilePage] is the page to display the vendor profile.
 /// This page will display the vendor profile data and the menu to navigate to other pages.
-class VendorProfilePage extends StatefulWidget {
-  const VendorProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<VendorProfilePage> createState() => _VendorProfilePage();
+  State<ProfilePage> createState() => _ProfilePage();
 }
 
-class _VendorProfilePage extends State<VendorProfilePage> {
+class _ProfilePage extends State<ProfilePage> {
   /// [openLogoutModal] is the function to open the logout modal.
   /// This function will open the modal to confirm the logout action.
   ///
