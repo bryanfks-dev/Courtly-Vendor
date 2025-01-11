@@ -7,7 +7,7 @@ class UserDTO {
   final String username;
 
   /// [phoneNumber] is the phone number of the user.
-  final String phoneNumber;
+  final String? phoneNumber;
 
   /// [profilePictureUrl] is the URL of the user's profile picture.
   final String? profilePictureUrl;
@@ -15,7 +15,7 @@ class UserDTO {
   UserDTO({
     required this.id,
     required this.username,
-    required this.phoneNumber,
+    this.phoneNumber,
     required this.profilePictureUrl,
   });
 

@@ -32,7 +32,7 @@ class User {
     return User(
         id: dto.id,
         username: dto.username,
-        phoneNumber: dto.phoneNumber,
+        phoneNumber: (dto.phoneNumber != null) ? dto.phoneNumber! : "",
         profilePictureUrl: (dto.profilePictureUrl != null)
             ? "${ApiServerConfig.baseUrl}/${dto.profilePictureUrl}"
             : "");

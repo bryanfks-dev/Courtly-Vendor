@@ -25,7 +25,7 @@ class LoginRepository {
       {required LoginFormDTO formDto}) async {
     // Make a POST request to the API.
     final Either<Failure, http.Response> either = await _apiRepository.post(
-        endpoint: 'auth/vendor/login', body: formDto.toMap(), timeoutInSec: 2);
+        endpoint: 'auth/vendor/login', body: formDto.toMap(), timeoutInSec: 5);
 
     // Check for failure
     if (either.isLeft()) {
